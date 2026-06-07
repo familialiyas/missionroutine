@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mission Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d0d1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<style>
+:root {
+  --surface: #161628; --surface2: #1e1e35;
+  --border: rgba(255,255,255,0.08);
+  --purple: #7c5cfc; --purple-soft: rgba(124,92,252,0.15);
+  --gold: #f5c842; --gold-soft: rgba(245,200,66,0.12);
+  --green: #3dd68c; --green-soft: rgba(61,214,140,0.12);
+  --red: #ff5b5b; --red-soft: rgba(255,91,91,0.12);
+  --orange: #ff8c42;
+  --text: #f0eeff; --muted: rgba(240,238,255,0.45); --faint: rgba(240,238,255,0.18);
+  --profile-bg: #0d0d1a;
+  --profile-glow: rgba(124,92,252,0.22);
+  --profile-accent: #7c5cfc;
+  --profile-accent-soft: rgba(124,92,252,0.15);
+  --profile-accent-text: #b09aff;
+  --profile-accent-rgb: 124,92,252;
+}
+body.theme-0 {
+  --profile-bg:#060c1e; --profile-glow:rgba(48,110,255,0.28);
+  --profile-accent:#2e6fff; --profile-accent-soft:rgba(48,110,255,0.16);
+  --profile-accent-text:#7aadff; --profile-accent-rgb:48,110,255;
+  --surface:#0e1a30; --surface2:#16243e;
+}
+body.theme-1 {
+  --profile-bg:#020f12; --profile-glow:rgba(0,200,224,0.28);
+  --profile-accent:#00c8e0; --profile-accent-soft:rgba(0,200,224,0.16);
+  --profile-accent-text:#67e8f9; --profile-accent-rgb:0,200,224;
+  --surface:#061419; --surface2:#0a1e22;
+}
+body.theme-2 {
+  --profile-bg:#031209; --profile-glow:rgba(34,197,94,0.28);
+  --profile-accent:#22c55e; --profile-accent-soft:rgba(34,197,94,0.16);
+  --profile-accent-text:#86efac; --profile-accent-rgb:34,197,94;
+  --surface:#061a0e; --surface2:#0a2415;
+}
+body.theme-3 {
+  --profile-bg:#120800; --profile-glow:rgba(249,115,22,0.28);
+  --profile-accent:#f97316; --profile-accent-soft:rgba(249,115,22,0.16);
+  --profile-accent-text:#fdba74; --profile-accent-rgb:249,115,22;
+  --surface:#1a0e02; --surface2:#251503;
+}
+body.theme-4 {
+  --profile-bg:#0e0820; --profile-glow:rgba(124,92,252,0.28);
+  --profile-accent:#7c5cfc; --profile-accent-soft:rgba(124,92,252,0.16);
+  --profile-accent-text:#b09aff; --profile-accent-rgb:124,92,252;
+  --surface:#130d28; --surface2:#1a1235;
+}
+body.theme-5 {
+  --profile-bg:#120814; --profile-glow:rgba(236,72,153,0.28);
+  --profile-accent:#ec4899; --profile-accent-soft:rgba(236,72,153,0.16);
+  --profile-accent-text:#f9a8d4; --profile-accent-rgb:236,72,153;
+  --surface:#1a0c1c; --surface2:#221028;
+}
+body.theme-6 {
+  --profile-bg:#120404; --profile-glow:rgba(239,68,68,0.28);
+  --profile-accent:#ef4444; --profile-accent-soft:rgba(239,68,68,0.16);
+  --profile-accent-text:#fca5a5; --profile-accent-rgb:239,68,68;
+  --surface:#1c0808; --surface2:#260a0a;
+}
+body.theme-7 {
+  --profile-bg:#100e00; --profile-glow:rgba(234,179,8,0.28);
+  --profile-accent:#eab308; --profile-accent-soft:rgba(234,179,8,0.16);
+  --profile-accent-text:#fde047; --profile-accent-rgb:234,179,8;
+  --surface:#181500; --surface2:#221e00;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { height:100%; background:#04040e; }
+body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background:var(--profile-bg); font-family:'Nunito',sans-serif; color:var(--text); overflow-x:hidden; transition:background 0.5s; }
+.view { display:none; min-height:100vh; flex-direction:column; }
+.view.active { display:flex; }
+.back-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:22px; padding:4px 8px; line-height:1; transition:color 0.15s; }
+.back-btn:hover { color:var(--text); }
+
+/* ── PROFILE SELECT ── */
+#view-profile {
+  background:radial-gradient(ellipse at 50% -10%,rgba(124,92,252,0.3) 0%,transparent 65%),#0d0d1a;
+  align-items:center; justify-content:center; padding:2rem; gap:0;
+}
+.app-logo { font-size:60px; text-align:center; filter:drop-shadow(0 0 24px rgba(124,92,252,0.5)); }
+.app-title { font-size:32px; font-weight:900; text-align:center; margin-top:8px; letter-spacing:-0.01em; }
+.app-tagline { font-size:11px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; text-align:center; margin:6px 0 2.25rem; }
+.profile-cards { display:grid; gap:12px; width:100%; max-width:380px; margin-bottom:1.75rem; }
+.profile-card {
+  background:linear-gradient(160deg,#1a1a2e 0%,#161628 100%);
+  border:2px solid rgba(255,255,255,0.07);
+  border-radius:24px; padding:1.75rem 0.75rem 1.5rem;
+  text-align:center; cursor:pointer; transition:all 0.25s;
+}
+.profile-card-0:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(48,110,255,0.28); border-color:rgba(48,110,255,0.55); }
+.profile-card-1:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,200,224,0.28); border-color:rgba(0,200,224,0.55); }
+.profile-card-2:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(34,197,94,0.28);  border-color:rgba(34,197,94,0.55); }
+.profile-card-3:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(249,115,22,0.28); border-color:rgba(249,115,22,0.55); }
+.profile-card-4:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(124,92,252,0.28); border-color:rgba(124,92,252,0.55); }
+.profile-card-5:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(236,72,153,0.28); border-color:rgba(236,72,153,0.55); }
+.profile-card-6:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(239,68,68,0.28);  border-color:rgba(239,68,68,0.55); }
+.profile-card-7:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(234,179,8,0.28);  border-color:rgba(234,179,8,0.55); }
+.profile-card-add     { border-style:dashed; opacity:0.6; }
+.profile-card-add:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(124,92,252,0.2); border-color:rgba(124,92,252,0.5); opacity:1; }
+.profile-avatar-lg { font-size:62px; margin-bottom:12px; line-height:1; filter:drop-shadow(0 4px 16px rgba(0,0,0,0.4)); }
+.profile-card-name { font-size:18px; font-weight:900; }
+.profile-card-age { font-size:10px; color:var(--muted); margin-top:5px; text-transform:uppercase; letter-spacing:0.12em; }
+.parent-btn { background:none; border:1px solid rgba(255,255,255,0.12); color:var(--muted); font-family:inherit; font-size:13px; padding:10px 26px; border-radius:24px; cursor:pointer; transition:all 0.15s; }
+.parent-btn:hover { border-color:rgba(255,255,255,0.28); color:var(--text); }
+
+/* ── AVATAR PICKER ── */
+#avatar-picker { position:fixed; inset:0; background:rgba(0,0,0,0.92); display:none; align-items:center; justify-content:center; flex-direction:column; z-index:200; padding:2rem; }
+#avatar-picker.show { display:flex; animation:fadeIn 0.2s; }
+.ap-title { font-size:22px; font-weight:900; margin-bottom:5px; }
+.ap-sub { font-size:13px; color:var(--muted); margin-bottom:1.5rem; }
+.avatar-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; width:100%; max-width:360px; margin-bottom:1.5rem; }
+.avatar-opt { background:var(--surface); border:2px solid var(--border); border-radius:16px; padding:12px 6px 9px; text-align:center; cursor:pointer; transition:all 0.18s; }
+.avatar-opt:hover { border-color:rgba(124,92,252,0.6); transform:scale(1.04); }
+.avatar-opt.selected { border-color:var(--gold); background:rgba(245,200,66,0.1); }
+.avatar-opt-icon { font-size:34px; line-height:1; margin-bottom:5px; }
+.avatar-opt-label { font-size:10px; color:var(--muted); font-weight:700; }
+.ap-save { padding:12px 40px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; }
+
+/* ── PLAYER HOME ── */
+#view-home { background:var(--profile-bg); }
+.home-topbar {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0.85rem 1rem; display:flex; align-items:center; gap:12px; flex-shrink:0;
+}
+.home-avatar-btn {
+  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  background:var(--profile-accent-soft); border:2px solid var(--profile-accent);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; cursor:pointer; transition:transform 0.15s;
+}
+.home-avatar-btn:hover { transform:scale(1.08); }
+.home-greeting { flex:1; }
+.home-hi { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
+.home-name { font-size:20px; font-weight:900; line-height:1.1; }
+.home-clock-wrap { text-align:right; flex-shrink:0; }
+.home-clock { font-family:'Space Mono',monospace; font-size:17px; font-weight:700; color:var(--profile-accent-text); line-height:1; }
+.home-clock-sec { font-size:0.72em; opacity:0.7; }
+.home-date { font-size:10px; color:var(--muted); text-align:right; margin-top:2px; }
+.home-body { flex:1; overflow-y:auto; padding:1.1rem 1rem 2rem; }
+.home-xp-chip { display:inline-flex; align-items:center; gap:6px; background:var(--gold-soft); border:1px solid rgba(245,200,66,0.25); border-radius:20px; padding:6px 16px; font-size:14px; font-weight:800; color:var(--gold); margin-bottom:1.25rem; }
+.section-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; font-weight:700; margin-bottom:0.75rem; }
+.routines-list { display:flex; flex-direction:column; gap:12px; }
+.routine-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:22px; padding:1.1rem 1.25rem;
+  cursor:pointer; transition:all 0.22s; display:flex; align-items:center; gap:16px;
+}
+.routine-card:hover { border-color:var(--profile-accent); transform:translateY(-3px); box-shadow:0 8px 28px rgba(var(--profile-accent-rgb),0.2); background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%); }
+.routine-card-icon { font-size:38px; flex-shrink:0; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+.routine-card-body { flex:1; min-width:0; }
+.routine-card-name { font-size:17px; font-weight:800; }
+.routine-card-meta { font-size:11px; color:var(--muted); margin-top:4px; font-family:'Space Mono',monospace; }
+.routine-card-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+.routine-xp-badge { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:var(--gold); background:var(--gold-soft); border-radius:12px; padding:3px 10px; }
+.empty-routines { text-align:center; padding:3rem 1rem; color:var(--muted); font-size:14px; line-height:1.7; }
+
+/* ── ROUTINE PREVIEW ── */
+#view-preview { background:var(--profile-bg); }
+.preview-header { background:var(--surface); border-bottom:1px solid var(--border); padding:1rem; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.preview-header-emoji { font-size:26px; }
+.preview-header-title { font-size:19px; font-weight:800; flex:1; }
+.preview-body { flex:1; overflow-y:auto; padding:1rem; }
+.preview-info { margin-bottom:1rem; display:flex; gap:8px; }
+.preview-stat { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:0.7rem 0.5rem; text-align:center; }
+.preview-stat-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:700; margin-bottom:6px; }
+.preview-stat-val { font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--profile-accent-text); }
+.preview-tasks-label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:700; margin-bottom:0.6rem; }
+.preview-task-row { display:flex; align-items:center; gap:10px; padding:0.7rem 0; border-bottom:1px solid var(--border); }
+.preview-task-row:last-child { border-bottom:none; }
+.preview-task-num { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); width:18px; text-align:right; flex-shrink:0; }
+.preview-task-emoji { font-size:20px; flex-shrink:0; }
+.preview-task-info { flex:1; min-width:0; }
+.preview-task-name { font-size:14px; font-weight:700; }
+.preview-task-window { font-size:10px; color:var(--muted); font-family:'Space Mono',monospace; margin-top:2px; }
+.preview-task-xp { font-family:'Space Mono',monospace; font-size:12px; color:var(--gold); font-weight:700; flex-shrink:0; }
+.preview-footer { padding:1rem; flex-shrink:0; border-top:1px solid var(--border); background:var(--profile-bg); }
+.start-btn { width:100%; padding:20px; background:var(--profile-accent); color:#fff; border:none; border-radius:22px; font-family:inherit; font-size:22px; font-weight:900; cursor:pointer; letter-spacing:0.04em; transition:all 0.18s; box-shadow:0 4px 20px rgba(var(--profile-accent-rgb),0.35); }
+.start-btn:active { transform:scale(0.97); box-shadow:none; }
+
+/* ── ACTIVE TASK ── */
+#view-active { background:var(--profile-bg); }
+.active-topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0.6rem 1rem 0.5rem; flex-shrink:0; display:flex; flex-direction:column; gap:0; }
+.active-topbar-row1 { display:flex; align-items:center; gap:8px; }
+.active-topbar-row2 { display:none; align-items:center; justify-content:center; gap:6px; padding-top:8px; margin-top:6px; border-top:1px solid var(--border); }
+.active-topbar-row2.visible { display:flex; }
+.active-progress-text { font-size:13px; color:var(--text); font-weight:800; }
+.active-progress-bar { width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:5px; overflow:hidden; }
+.active-progress-fill { height:100%; background:var(--profile-accent); border-radius:5px; transition:width 0.5s ease; width:0; }
+.active-xp-chip { font-family:'Space Mono',monospace; font-size:15px; font-weight:700; background:var(--gold-soft); border:1px solid rgba(245,200,66,0.25); border-radius:20px; padding:4px 14px; color:var(--gold); transition:transform 0.15s; flex-shrink:0; }
+.active-xp-chip.bump { animation:chipBump 0.3s ease; }
+.pass-strip { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.pass-label { font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; }
+.pass-avatar-btn { width:34px; height:34px; border-radius:50%; background:var(--surface2); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; transition:all 0.15s; flex-shrink:0; line-height:1; }
+.pass-avatar-btn:hover { border-color:var(--profile-accent); transform:scale(1.12); }
+.undo-btn { background:none; border:1px solid rgba(var(--profile-accent-rgb),0.4); border-radius:10px; color:var(--profile-accent-text); padding:5px 9px; cursor:pointer; font-size:15px; transition:all 0.15s; flex-shrink:0; line-height:1; visibility:hidden; }
+.undo-btn:hover { border-color:var(--profile-accent); background:var(--profile-accent-soft); }
+.active-cancel-btn { background:rgba(255,91,91,0.08); border:1px solid rgba(255,91,91,0.4); border-radius:10px; color:var(--red); padding:5px 9px; cursor:pointer; font-size:15px; transition:all 0.15s; flex-shrink:0; line-height:1; }
+.active-cancel-btn:hover { background:var(--red-soft); border-color:var(--red); }
+.active-clock-strip { flex:1; text-align:center; font-family:'Space Mono',monospace; font-size:18px; font-weight:700; color:var(--profile-accent-text); letter-spacing:0.04em; }
+.active-clock-strip .blink { animation:blink 1s step-start infinite; display:inline-block; }
+.active-clock-strip .sec { font-size:0.6em; opacity:0.7; }
+.active-bottom-bar { padding:0.75rem 1rem 1rem; flex-shrink:0; border-top:1px solid var(--border); background:var(--surface); }
+.active-bottom-bar-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.resume-card { background:var(--profile-accent-soft); border:1.5px solid var(--profile-accent); border-radius:16px; padding:0.9rem 1rem; margin-bottom:1rem; cursor:pointer; display:flex; align-items:center; gap:12px; transition:all 0.18s; }
+.resume-card:hover { transform:translateY(-2px); box-shadow:0 4px 18px rgba(var(--profile-accent-rgb),0.22); }
+.resume-icon { font-size:28px; flex-shrink:0; }
+.resume-body { flex:1; min-width:0; }
+.resume-label { font-size:10px; color:var(--profile-accent-text); text-transform:uppercase; letter-spacing:0.1em; font-weight:700; }
+.resume-name  { font-size:16px; font-weight:800; }
+.resume-prog  { font-size:12px; color:var(--muted); margin-top:2px; }
+.resume-arrow { font-size:18px; color:var(--profile-accent); flex-shrink:0; }
+@keyframes chipBump { 0%,100%{transform:scale(1)} 50%{transform:scale(1.22)} }
+
+/* ── WEEKLY CHART ── */
+.weekly-chart { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:0.9rem 1rem; margin-bottom:12px; }
+.weekly-bars { display:flex; gap:5px; align-items:flex-end; }
+.wk-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:0; }
+.wk-xp-label { font-family:'Space Mono',monospace; font-size:8px; font-weight:700; color:var(--profile-accent-text); min-height:12px; line-height:1; text-align:center; margin-bottom:3px; }
+.wk-bar { width:75%; border-radius:4px 4px 0 0; min-height:3px; }
+.wk-col:not(.today) .wk-bar { background:rgba(var(--profile-accent-rgb),0.22); }
+.wk-col.today .wk-bar { background:var(--profile-accent); box-shadow:0 0 8px rgba(var(--profile-accent-rgb),0.45); }
+.wk-day-label { font-size:9px; font-weight:700; color:var(--faint); padding-top:5px; width:100%; text-align:center; letter-spacing:0.04em; }
+.wk-col.today .wk-day-label { color:var(--profile-accent-text); }
+
+.active-main { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.25rem 1.5rem 0.5rem; text-align:center; transition:opacity 0.22s; }
+.active-main.fading { opacity:0; }
+.active-task-emoji { font-size:90px; margin-bottom:0.75rem; animation:float 3s ease-in-out infinite; line-height:1; filter:drop-shadow(0 6px 18px rgba(0,0,0,0.35)); }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.active-task-name { font-size:36px; font-weight:900; line-height:1.15; margin-bottom:0.5rem; }
+.active-task-desc { font-size:15px; color:var(--muted); margin-bottom:1.25rem; max-width:280px; line-height:1.6; min-height:1.6em; }
+.active-time-window { font-family:'Space Mono',monospace; font-size:12px; color:var(--muted); margin-bottom:6px; }
+.active-task-xp { display:inline-flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:16px; font-weight:700; background:var(--gold-soft); border:1px solid rgba(245,200,66,0.25); border-radius:20px; padding:5px 16px; color:var(--gold); margin-bottom:1rem; }
+.active-timer { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; padding:5px 16px; border-radius:20px; display:inline-block; }
+.active-timer.in-time  { background:var(--green-soft); color:var(--green); }
+.active-timer.past-time{ background:var(--red-soft); color:var(--red); }
+.active-timer.upcoming { background:var(--gold-soft); color:var(--gold); }
+
+.active-btns { display:flex; gap:14px; padding:1rem 1rem 0.5rem; flex-shrink:0; }
+.scoring-hint { display:flex; justify-content:center; gap:18px; padding:0.25rem 1rem 0.85rem; flex-shrink:0; }
+.sh-item { display:flex; align-items:center; gap:3px; font-size:10px; color:var(--faint); font-weight:700; letter-spacing:0.04em; }
+.sh-x { color:var(--red); font-size:12px; }
+.sh-tick { color:var(--green); font-size:12px; }
+.sh-bonus { color:var(--gold); font-size:12px; }
+.btn-action {
+  flex:1; min-height:120px; border-radius:26px; border:2px solid;
+  font-size:46px; font-weight:900; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 0.1s, box-shadow 0.1s; -webkit-user-select:none; user-select:none;
+}
+.btn-action:active:not(:disabled) { transform:scale(0.90); }
+.btn-action:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-x    { background:rgba(255,91,91,0.1); color:var(--red); border-color:var(--red); }
+.btn-tick { background:rgba(61,214,140,0.1); color:var(--green); border-color:var(--green); }
+.btn-x:active:not(:disabled)    { box-shadow:0 0 0 8px rgba(255,91,91,0.18); }
+.btn-tick:active:not(:disabled)  { box-shadow:0 0 0 8px rgba(61,214,140,0.18); }
+
+/* XP float */
+@keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-110px) scale(0.8)} }
+.xp-float { position:fixed; pointer-events:none; font-family:'Space Mono',monospace; font-size:24px; font-weight:900; animation:floatUp 0.95s ease-out forwards; z-index:300; text-shadow:0 2px 8px rgba(0,0,0,0.6); transform:translateX(-50%); }
+
+/* ── SESSION COMPLETE ── */
+#view-complete { background:radial-gradient(ellipse at 50% -5%,var(--profile-glow) 0%,transparent 55%),var(--profile-bg); align-items:center; overflow-y:auto; padding:2rem 1.5rem 3rem; }
+.complete-avatar { font-size:92px; animation:bounce 0.7s ease infinite alternate; margin-bottom:0.5rem; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4)); }
+@keyframes bounce { from{transform:scale(1) translateY(0)} to{transform:scale(1.12) translateY(-10px)} }
+.complete-title { font-size:36px; font-weight:900; text-align:center; margin-bottom:6px; letter-spacing:-0.01em; }
+.complete-msg { font-size:15px; color:var(--muted); text-align:center; margin-bottom:1.25rem; max-width:280px; line-height:1.55; }
+.complete-xp { font-family:'Space Mono',monospace; font-size:68px; font-weight:700; color:var(--gold); margin-bottom:1.75rem; text-align:center; line-height:1; }
+.complete-xp.neg { color:var(--red); }
+.complete-breakdown { width:100%; max-width:360px; background:var(--surface); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1.75rem; }
+.bd-row { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid var(--border); }
+.bd-row:last-child { border-bottom:none; }
+.bd-emoji { font-size:18px; flex-shrink:0; }
+.bd-name { flex:1; font-size:13px; font-weight:700; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bd-badge { font-size:10px; font-weight:800; padding:2px 8px; border-radius:8px; flex-shrink:0; text-transform:uppercase; }
+.bd-badge.bonus    { background:var(--gold-soft); color:var(--gold); }
+.bd-badge.full     { background:var(--green-soft); color:var(--green); }
+.bd-badge.negative { background:var(--red-soft); color:var(--red); }
+.bd-xp { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; flex-shrink:0; min-width:44px; text-align:right; }
+.complete-back-btn { padding:16px 48px; background:var(--profile-accent); color:#fff; border:none; border-radius:22px; font-family:inherit; font-size:17px; font-weight:800; cursor:pointer; transition:transform 0.15s; box-shadow:0 4px 20px rgba(var(--profile-accent-rgb),0.35); }
+.complete-back-btn:active { transform:scale(0.96); box-shadow:none; }
+
+/* ── PARENT SETTINGS ── */
+#view-parent { background:#0d0d1a; }
+.std-header { background:#161628; border-bottom:1px solid var(--border); padding:1rem; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.std-header h2 { font-size:18px; font-weight:800; }
+.std-body { flex:1; overflow-y:auto; padding:1rem 1rem 5rem; }
+.parent-routine-card { background:#161628; border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; display:flex; flex-direction:column; }
+.parent-routine-top { display:flex; align-items:center; gap:12px; padding:0.9rem 1rem; }
+.parent-routine-actions { display:flex; gap:6px; padding:0.55rem 1rem; border-top:1px solid var(--border); background:rgba(0,0,0,0.18); }
+.parent-routine-actions .icon-btn { flex:1; text-align:center; padding:6px 4px; font-size:14px; }
+.parent-routine-icon { font-size:26px; flex-shrink:0; }
+.parent-routine-info { flex:1; min-width:0; }
+.parent-routine-name { font-size:15px; font-weight:700; }
+.parent-routine-tasks { font-size:11px; color:var(--muted); margin-top:2px; }
+.icon-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:10px; padding:6px 10px; cursor:pointer; font-size:13px; transition:all 0.15s; }
+.icon-btn:hover { border-color:rgba(255,255,255,0.25); color:var(--text); }
+.icon-btn.danger:hover { border-color:var(--red); color:var(--red); }
+.add-routine-btn { width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; margin-top:0.5rem; }
+.add-player-btn { width:100%; padding:11px; background:none; border:1.5px dashed rgba(255,255,255,0.15); border-radius:12px; color:var(--muted); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; margin-top:6px; }
+.add-player-btn:hover { border-color:var(--purple); color:var(--text); }
+.player-mgmt-card { background:#161628; border:1px solid var(--border); border-radius:14px; padding:0.85rem 1rem; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+.player-mgmt-av { font-size:28px; flex-shrink:0; }
+.player-mgmt-info { flex:1; min-width:0; }
+.player-mgmt-name { font-size:15px; font-weight:700; }
+.player-mgmt-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.settings-ptabs { display:flex; gap:6px; margin-bottom:1rem; flex-wrap:wrap; }
+.settings-ptab { padding:6px 14px; border-radius:10px; border:1.5px solid var(--border); background:#161628; font-family:inherit; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.settings-ptab.active { border-color:var(--purple); color:var(--text); background:var(--purple-soft); }
+.theme-swatches { display:flex; gap:8px; flex-wrap:wrap; }
+.theme-swatch { width:36px; height:36px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.15s; flex-shrink:0; }
+.theme-swatch.selected { border-color:#fff; transform:scale(1.15); }
+.section-divider { border:none; border-top:1px solid var(--border); margin:1.25rem 0; }
+
+/* ── ROUTINE EDITOR OVERLAY ── */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.72); display:none; align-items:flex-end; z-index:150; }
+.overlay.show { display:flex; animation:fadeIn 0.2s; }
+#overlay-task-emoji { z-index:200; }
+.overlay-sheet { width:100%; max-width:430px; margin:0 auto; max-height:92vh; background:#0d0d1a; border-radius:24px 24px 0 0; border-top:1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; animation:slideUp 0.28s ease; }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.overlay-header { padding:1.25rem 1.25rem 0.5rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; border-bottom:1px solid var(--border); }
+.overlay-title { font-size:18px; font-weight:900; }
+.overlay-close { background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; padding:2px 6px; }
+.editor-scroll { flex:1; overflow-y:auto; padding:1rem 1.25rem; }
+.field-group { margin-bottom:1rem; }
+.field-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; font-weight:700; display:block; margin-bottom:5px; }
+.field-row { display:flex; gap:8px; }
+.field-input { flex:1; background:#161628; border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:inherit; font-size:14px; font-weight:600; padding:10px 12px; outline:none; }
+.field-input:focus { border-color:var(--purple); }
+.emoji-input-btn { width:58px; height:46px; background:#161628; border:1.5px solid var(--border); border-radius:10px; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; }
+.emoji-input-btn:hover { border-color:var(--purple); background:var(--purple-soft); }
+.editor-section-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; font-weight:700; margin:1rem 0 0.6rem; }
+.et-card { background:#161628; border:1px solid var(--border); border-radius:14px; padding:0.85rem; margin-bottom:10px; }
+.et-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.et-num { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); width:16px; flex-shrink:0; text-align:right; }
+.et-emoji-btn { width:50px; height:38px; background:#1e1e35; border:1.5px solid var(--border); border-radius:8px; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; line-height:1; }
+.et-emoji-btn:hover { border-color:var(--purple); background:var(--purple-soft); }
+.drag-handle { width:26px; flex-shrink:0; cursor:grab; display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--muted); opacity:0.45; transition:opacity 0.12s; -webkit-user-select:none; user-select:none; border-radius:6px; align-self:stretch; }
+.drag-handle:hover { opacity:1; background:rgba(255,255,255,0.06); }
+.drag-handle:active { cursor:grabbing; opacity:1; }
+.drag-item-source { opacity:0.2 !important; }
+.drag-item-target { border-color:var(--purple) !important; background:var(--purple-soft) !important; }
+.task-emoji-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:0.25rem 0 0.5rem; }
+.task-emoji-opt { background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; font-size:24px; padding:7px 4px; cursor:pointer; text-align:center; transition:all 0.15s; line-height:1; }
+.task-emoji-opt:hover { border-color:var(--purple); background:var(--purple-soft); transform:scale(1.08); }
+.et-name { flex:1; background:#1e1e35; border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; padding:6px 8px; outline:none; }
+.et-name:focus { border-color:var(--purple); }
+.et-desc { width:100%; background:#1e1e35; border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:inherit; font-size:12px; padding:6px 8px; outline:none; resize:none; margin-bottom:8px; color:var(--muted); }
+.et-desc:focus { border-color:var(--purple); color:var(--text); }
+.et-bottom { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; align-items:end; }
+.et-field-label { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:700; display:block; margin-bottom:3px; }
+.et-time { width:100%; background:#1e1e35; border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Space Mono',monospace; font-size:12px; padding:6px 6px; outline:none; }
+.et-time:focus { border-color:var(--purple); }
+.xp-stepper { display:flex; align-items:center; gap:4px; }
+.sp-btn { width:28px; height:28px; border-radius:7px; background:#0d0d1a; border:1px solid var(--border); color:var(--text); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; flex-shrink:0; }
+.sp-btn:hover { border-color:var(--purple); }
+.sp-val { font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:var(--gold); min-width:30px; text-align:center; }
+.et-del { background:none; border:none; color:var(--red); cursor:pointer; font-size:17px; padding:2px 4px; flex-shrink:0; opacity:0.7; }
+.et-del:hover { opacity:1; }
+.add-task-btn { width:100%; padding:10px; background:none; border:1.5px dashed rgba(255,255,255,0.14); border-radius:12px; color:var(--muted); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; margin:4px 0 1rem; }
+.add-task-btn:hover { border-color:var(--purple); color:var(--text); }
+.overlay-footer { padding:1rem 1.25rem; flex-shrink:0; border-top:1px solid var(--border); }
+.save-btn-full { width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer; }
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* ── CALENDAR ── */
+.home-records-btn { width:100%; margin-top:1rem; padding:11px; background:none; border:1px solid var(--border); border-radius:14px; color:var(--muted); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.home-records-btn:hover { border-color:var(--profile-accent); color:var(--profile-accent-text); }
+.cal-player-tabs { display:flex; gap:8px; padding:0.75rem 1rem 0; flex-shrink:0; }
+.cal-ptab { flex:1; padding:7px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface); font-family:inherit; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; transition:all 0.15s; text-align:center; }
+.cal-ptab.active { border-color:var(--profile-accent); color:var(--text); background:var(--profile-accent-soft); }
+.cal-nav { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem 0.5rem; flex-shrink:0; }
+.cal-month-title { font-size:17px; font-weight:900; }
+.cal-nav-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:10px; padding:5px 14px; cursor:pointer; font-size:16px; transition:all 0.15s; }
+.cal-nav-btn:hover { border-color:rgba(255,255,255,0.25); color:var(--text); }
+.cal-dow-header { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; padding:0 1rem; margin-bottom:4px; flex-shrink:0; }
+.cal-dow-header div { text-align:center; font-size:9px; color:var(--muted); font-weight:700; text-transform:uppercase; padding:4px 0; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; padding:0 1rem; flex-shrink:0; }
+.cal-day { border-radius:9px; padding:5px 2px 4px; text-align:center; min-height:46px; display:flex; flex-direction:column; align-items:center; }
+.cal-day.cal-has-data { background:var(--surface); border:1px solid var(--border); cursor:pointer; }
+.cal-day.cal-has-data:hover { border-color:var(--profile-accent); }
+.cal-day.cal-today .cal-day-num { color:var(--profile-accent); font-weight:900; }
+.cal-day-num { font-size:11px; font-weight:700; color:var(--faint); }
+.cal-day.cal-has-data .cal-day-num { color:var(--text); }
+.cal-day-xp { font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:var(--gold); margin-top:3px; }
+.cal-day-xp.neg { color:var(--red); }
+.cal-summary { margin:0.85rem 1rem 0; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:0.85rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.cal-summary-label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; }
+.cal-summary-xp { font-family:'Space Mono',monospace; font-size:22px; font-weight:700; color:var(--gold); }
+.cal-summary-xp.neg { color:var(--red); }
+.range-section { margin:0.75rem 1rem 1.5rem; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:0.9rem 1rem; }
+.range-section-title { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.65rem; }
+.range-inputs { display:flex; align-items:center; gap:8px; margin-bottom:0.75rem; }
+.range-date { flex:1; background:#0d0d1a; border:1px solid var(--border); border-radius:9px; color:var(--text); font-family:'Space Mono',monospace; font-size:12px; padding:7px 8px; outline:none; }
+.range-date:focus { border-color:var(--purple); }
+.range-to { font-size:11px; color:var(--muted); font-weight:700; flex-shrink:0; }
+.range-result { display:flex; flex-direction:column; gap:8px; }
+.range-player-row { display:flex; align-items:center; justify-content:space-between; }
+.range-player-name { font-size:13px; font-weight:700; }
+.range-player-xp { font-family:'Space Mono',monospace; font-size:18px; font-weight:700; color:var(--gold); }
+.range-player-xp.neg { color:var(--red); }
+.range-divider { border:none; border-top:1px solid var(--border); margin:4px 0; }
+.range-combined-row { display:flex; align-items:center; justify-content:space-between; padding-top:6px; }
+.range-combined-label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.07em; }
+.range-combined-xp { font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:var(--muted); }
+.range-hint { font-size:11px; color:var(--faint); text-align:center; padding:2px 0; }
+/* ── DAY DETAIL ── */
+.detail-session { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1rem; margin-bottom:12px; }
+.detail-session-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; }
+.detail-session-name { font-size:15px; font-weight:800; }
+.detail-session-xp { font-family:'Space Mono',monospace; font-size:15px; font-weight:700; color:var(--gold); }
+.detail-session-xp.neg { color:var(--red); }
+.detail-task-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--border); }
+.detail-task-row:last-child { border-bottom:none; }
+.detail-task-emoji { font-size:16px; flex-shrink:0; }
+.detail-task-name { flex:1; font-size:13px; font-weight:700; min-width:0; }
+.detail-task-badge { font-size:10px; font-weight:800; padding:2px 7px; border-radius:7px; flex-shrink:0; text-transform:uppercase; }
+.detail-task-badge.bonus    { background:var(--gold-soft); color:var(--gold); }
+.detail-task-badge.full     { background:var(--green-soft); color:var(--green); }
+.detail-task-badge.negative { background:var(--red-soft); color:var(--red); }
+.detail-task-xp { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; flex-shrink:0; min-width:40px; text-align:right; }
+.detail-edit-btn { width:100%; margin-top:0.75rem; padding:9px; background:none; border:1px solid var(--border); border-radius:11px; color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.detail-edit-btn:hover { border-color:var(--purple); color:var(--text); }
+.detail-empty { text-align:center; padding:3rem 1rem; color:var(--muted); font-size:14px; }
+/* ── DAY EDIT ── */
+.edit-task-row { display:flex; align-items:center; gap:8px; padding:0.7rem 0; border-bottom:1px solid var(--border); }
+.edit-task-row:last-child { border-bottom:none; }
+.edit-task-emoji { font-size:17px; flex-shrink:0; }
+.edit-task-name { font-size:12px; font-weight:700; flex:1; min-width:0; }
+.edit-result-btns { display:flex; gap:3px; flex-shrink:0; }
+.erb { font-size:10px; font-weight:700; padding:4px 7px; border-radius:7px; border:1px solid var(--border); background:none; color:var(--muted); cursor:pointer; transition:all 0.12s; }
+.erb.sel-bonus    { background:var(--gold-soft); border-color:var(--gold); color:var(--gold); }
+.erb.sel-full     { background:var(--green-soft); border-color:var(--green); color:var(--green); }
+.erb.sel-negative { background:var(--red-soft); border-color:var(--red); color:var(--red); }
+.edit-task-xp { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; flex-shrink:0; min-width:40px; text-align:right; }
+.edit-total-row { display:flex; justify-content:space-between; align-items:center; padding:0.85rem 0 0.25rem; border-top:1px solid var(--border); margin-top:0.5rem; }
+.edit-total-label { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; }
+.edit-total-xp { font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--gold); }
+.edit-total-xp.neg { color:var(--red); }
+/* ── PIN ── */
+#overlay-pin { justify-content:center; align-items:center; }
+#overlay-pin .overlay-sheet { border-radius:20px; width:calc(100% - 3rem); max-width:300px; animation:fadeIn 0.2s; }
+.pin-body { padding:1.5rem 1.25rem 1rem; text-align:center; }
+.pin-hint { font-size:13px; color:var(--muted); margin-bottom:1rem; }
+.pin-input { background:#161628; border:2px solid var(--border); border-radius:12px; color:var(--text); font-family:'Space Mono',monospace; font-size:28px; font-weight:700; padding:12px 16px; text-align:center; width:100%; outline:none; letter-spacing:0.3em; }
+.pin-input:focus { border-color:var(--purple); }
+.pin-error { font-size:12px; color:var(--red); margin-top:8px; min-height:18px; font-weight:700; }
+/* ── PARENT PIN SECTION ── */
+.parent-section-title { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.09em; font-weight:700; margin:1.5rem 0 0.6rem; }
+.pin-change-row { display:flex; gap:8px; }
+.pin-change-input { flex:1; background:#161628; border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Space Mono',monospace; font-size:18px; font-weight:700; padding:10px 12px; text-align:center; letter-spacing:0.2em; outline:none; }
+.pin-change-input:focus { border-color:var(--purple); }
+.pin-save-btn { padding:10px 16px; background:var(--purple); color:#fff; border:none; border-radius:10px; font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; }
+.pin-tip { font-size:11px; color:var(--muted); margin-top:6px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     PROFILE SELECT
+════════════════════════════════════════════ -->
+<div id="view-profile" class="view active">
+  <div class="app-logo">🚀</div>
+  <div class="app-title">Mission Routine</div>
+  <div class="app-tagline">Who's doing missions today?</div>
+  <div class="profile-cards" id="profile-cards-container"></div>
+  <button class="parent-btn" onclick="showView('parent')">⚙️ Parent Settings</button>
+</div>
+
+<!-- AVATAR PICKER -->
+<div id="avatar-picker">
+  <div class="ap-title">Choose your character!</div>
+  <div class="ap-sub" id="ap-sub">Pick who you want to be</div>
+  <div class="avatar-grid" id="avatar-grid"></div>
+  <button class="ap-save" onclick="saveAvatar()">Let's Go! 🚀</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PLAYER HOME
+════════════════════════════════════════════ -->
+<div id="view-home" class="view">
+  <div class="home-topbar">
+    <div class="home-avatar-btn" id="home-avatar-btn" onclick="goToProfileSelect()" title="Switch player"></div>
+    <div class="home-greeting">
+      <div class="home-hi" id="home-hi">Good morning,</div>
+      <div class="home-name" id="home-player-name">Uzaiyr</div>
+    </div>
+    <div class="home-clock-wrap">
+      <div class="home-clock" id="home-clock">00:00</div>
+      <div class="home-date" id="home-date">–</div>
+    </div>
+  </div>
+  <div class="home-body">
+    <div id="home-xp-area"></div>
+    <div class="section-label">Choose your routine</div>
+    <div class="routines-list" id="routines-list"></div>
+    <button type="button" class="home-records-btn" onclick="openCalendar()">📅 View Records</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ROUTINE PREVIEW
+════════════════════════════════════════════ -->
+<div id="view-preview" class="view">
+  <div class="preview-header">
+    <button class="back-btn" onclick="showView('home')">←</button>
+    <div class="preview-header-emoji" id="preview-emoji">☀️</div>
+    <div class="preview-header-title" id="preview-title">Routine</div>
+  </div>
+  <div class="preview-body">
+    <div class="preview-info" id="preview-info"></div>
+    <div class="preview-tasks-label">Task sequence</div>
+    <div id="preview-task-list"></div>
+  </div>
+  <div class="preview-footer">
+    <button class="start-btn" onclick="startRoutine()">▶ &nbsp;START MISSIONS</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ACTIVE TASK
+════════════════════════════════════════════ -->
+<div id="view-active" class="view">
+  <div class="active-topbar">
+    <div class="active-topbar-row1">
+      <button type="button" class="undo-btn" id="undo-btn" onclick="undoPreviousTask()">←</button>
+      <div class="active-clock-strip" id="active-clock-strip">00:00</div>
+      <button type="button" class="active-cancel-btn" onclick="cancelRoutine()">✕</button>
+    </div>
+    <div class="active-topbar-row2" id="pass-strip-row">
+      <div class="pass-strip" id="pass-strip"></div>
+    </div>
+  </div>
+  <div class="active-main" id="active-main">
+    <div class="active-task-emoji" id="active-task-emoji">✅</div>
+    <div class="active-task-name" id="active-task-name">Task</div>
+    <div class="active-task-desc" id="active-task-desc"></div>
+    <div class="active-task-xp" id="active-task-xp"><span id="active-task-xp-val">+10 XP</span></div>
+    <div class="active-time-window" id="active-time-window">–</div>
+    <div class="active-timer" id="active-timer">–</div>
+  </div>
+  <div class="active-btns">
+    <button class="btn-action btn-x"    id="btn-x"    onclick="handleTaskResult('negative')">✕</button>
+    <button class="btn-action btn-tick" id="btn-tick" onclick="handleTaskResult('tick')">✓</button>
+  </div>
+  <div class="active-bottom-bar">
+    <div class="active-bottom-bar-top">
+      <div class="active-progress-text" id="active-progress-text">Task 1 of 1</div>
+      <div class="active-xp-chip" id="active-xp-chip">0 XP</div>
+    </div>
+    <div class="active-progress-bar"><div class="active-progress-fill" id="active-progress-fill"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SESSION COMPLETE
+════════════════════════════════════════════ -->
+<div id="view-complete" class="view">
+  <div class="complete-avatar" id="complete-avatar">🧑‍🚀</div>
+  <div class="complete-title" id="complete-title">EXCELLENT!</div>
+  <div class="complete-msg" id="complete-msg">Outstanding work!</div>
+  <div class="complete-xp" id="complete-xp">+0 XP</div>
+  <div class="complete-breakdown" id="complete-breakdown"></div>
+  <button class="complete-back-btn" onclick="showView('home')">Back to Routines</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PARENT SETTINGS
+════════════════════════════════════════════ -->
+<div id="view-parent" class="view">
+  <div class="std-header">
+    <button class="back-btn" onclick="showView('profile')">←</button>
+    <h2>⚙️ Parent Settings</h2>
+  </div>
+  <div class="std-body">
+    <div class="parent-section-title">Players</div>
+    <div id="parent-player-list"></div>
+    <button type="button" class="add-player-btn" id="add-player-btn" onclick="openPlayerEditor(null)">+ Add Player (max 4)</button>
+    <hr class="section-divider">
+    <div class="parent-section-title">Routines</div>
+    <div class="settings-ptabs" id="settings-ptabs"></div>
+    <div id="parent-routine-list"></div>
+    <button type="button" class="add-routine-btn" onclick="openEditor(null)">+ Add Routine</button>
+    <div class="parent-section-title">Parent PIN</div>
+    <div class="pin-change-row">
+      <input class="pin-change-input" id="pin-change-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+      <button type="button" class="pin-save-btn" onclick="saveParentPin()">Save</button>
+    </div>
+    <div class="pin-tip">Used to protect record editing. Default: 1234</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CALENDAR
+════════════════════════════════════════════ -->
+<div id="view-calendar" class="view">
+  <div class="std-header">
+    <button type="button" class="back-btn" onclick="showView('home')">←</button>
+    <h2>📅 Records</h2>
+  </div>
+  <div class="cal-player-tabs" id="cal-player-tabs"></div>
+  <div class="cal-nav">
+    <button type="button" class="cal-nav-btn" onclick="calPrevMonth()">←</button>
+    <div class="cal-month-title" id="cal-month-title">–</div>
+    <button type="button" class="cal-nav-btn" onclick="calNextMonth()">→</button>
+  </div>
+  <div class="cal-dow-header">
+    <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+  <div class="cal-summary">
+    <div class="cal-summary-label">Month Total</div>
+    <div class="cal-summary-xp" id="cal-month-total">+0 XP</div>
+  </div>
+  <div class="range-section">
+    <div class="range-section-title">Date Range Total</div>
+    <div class="range-inputs">
+      <input type="date" class="range-date" id="range-start" onchange="updateRangeTotal()">
+      <span class="range-to">to</span>
+      <input type="date" class="range-date" id="range-end" onchange="updateRangeTotal()">
+    </div>
+    <div id="range-result-area"><div class="range-hint">Pick a start and end date above</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     DAY DETAIL
+════════════════════════════════════════════ -->
+<div id="view-day-detail" class="view">
+  <div class="std-header">
+    <button type="button" class="back-btn" onclick="showView('calendar')">←</button>
+    <h2 id="detail-date-title">–</h2>
+  </div>
+  <div class="std-body" id="detail-body"></div>
+</div>
+
+<!-- DAY EDIT OVERLAY -->
+<div id="overlay-day-edit" class="overlay">
+  <div class="overlay-sheet">
+    <div class="overlay-header">
+      <div class="overlay-title" id="day-edit-title">Edit Record</div>
+      <button type="button" class="overlay-close" onclick="closeDayEdit()">✕</button>
+    </div>
+    <div class="editor-scroll" id="day-edit-body"></div>
+    <div class="overlay-footer">
+      <button type="button" class="save-btn-full" onclick="saveDayEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIN OVERLAY -->
+<div id="overlay-pin" class="overlay">
+  <div class="overlay-sheet">
+    <div class="overlay-header">
+      <div class="overlay-title">🔒 Parent Access</div>
+      <button type="button" class="overlay-close" onclick="closePin()">✕</button>
+    </div>
+    <div class="pin-body">
+      <div class="pin-hint">Enter parent PIN to edit this record</div>
+      <input class="pin-input" id="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off" onkeydown="if(event.key==='Enter')submitPin()">
+      <div class="pin-error" id="pin-error"></div>
+    </div>
+    <div class="overlay-footer">
+      <button type="button" class="save-btn-full" onclick="submitPin()">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER EDITOR OVERLAY -->
+<div id="overlay-player-editor" class="overlay">
+  <div class="overlay-sheet">
+    <div class="overlay-header">
+      <div class="overlay-title" id="pe-title">New Player</div>
+      <button type="button" class="overlay-close" onclick="closePlayerEditor()">✕</button>
+    </div>
+    <div class="editor-scroll">
+      <div class="field-group">
+        <label class="field-label">Name</label>
+        <input class="field-input" id="pe-name" placeholder="Player name" maxlength="20">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Age</label>
+        <input class="field-input" id="pe-age" type="number" min="1" max="18" placeholder="Age">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Character</label>
+        <div class="avatar-grid" id="pe-avatar-grid"></div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Colour Theme</label>
+        <div class="theme-swatches" id="pe-theme-swatches"></div>
+      </div>
+    </div>
+    <div class="overlay-footer" id="pe-footer">
+      <button type="button" class="save-btn-full" onclick="savePlayerEditor()">Save Player</button>
+    </div>
+  </div>
+</div>
+
+<!-- TASK EMOJI PICKER OVERLAY -->
+<div id="overlay-task-emoji" class="overlay">
+  <div class="overlay-sheet">
+    <div class="overlay-header">
+      <div class="overlay-title">Pick an icon</div>
+      <button type="button" class="overlay-close" onclick="closeTaskEmojiPicker()">✕</button>
+    </div>
+    <div class="editor-scroll">
+      <div class="task-emoji-grid" id="task-emoji-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ROUTINE EDITOR OVERLAY
+════════════════════════════════════════════ -->
+<div id="overlay-editor" class="overlay">
+  <div class="overlay-sheet">
+    <div class="overlay-header">
+      <div class="overlay-title" id="editor-title">New Routine</div>
+      <button class="overlay-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="editor-scroll">
+      <div class="field-group">
+        <label class="field-label">Routine Name & Icon</label>
+        <div class="field-row">
+          <button type="button" class="emoji-input-btn" id="editor-emoji-btn" onclick="openRoutineEmojiPicker()">📋</button>
+          <input class="field-input" id="editor-name" placeholder="e.g. School Day Morning">
+        </div>
+      </div>
+      <div class="editor-section-title">Tasks</div>
+      <div id="editor-task-list"></div>
+      <button class="add-task-btn" onclick="addEditorTask()">+ Add Task</button>
+    </div>
+    <div class="overlay-footer">
+      <button class="save-btn-full" onclick="saveRoutine()">Save Routine</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CATALOGUE ────────────────────────────────────────────────────────────────
+const AVATAR_CATALOGUE = [
+  {icon:'🧑‍🚀',label:'Astronaut'},{icon:'🦸',label:'Hero'},{icon:'🧙',label:'Wizard'},{icon:'🦊',label:'Fox'},
+  {icon:'🐉',label:'Dragon'},{icon:'🤖',label:'Robot'},{icon:'🦁',label:'Lion'},{icon:'🐺',label:'Wolf'},
+  {icon:'🦅',label:'Eagle'},{icon:'🐬',label:'Dolphin'},{icon:'🧜',label:'Mermaid'},{icon:'🦋',label:'Butterfly'},
+];
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const THEME_COLORS = ['#2e6fff','#00c8e0','#22c55e','#f97316','#7c5cfc','#ec4899','#ef4444','#eab308'];
+const TASK_EMOJIS = [
+  '✅','⏰','🚿','🛁','👕','👟','🎒','🛏️',
+  '🦷','🪥','🧴','🚽','🪒','💊','🌡️','🧼',
+  '🥣','🍽️','🥛','🍎','🍌','🥤','🧃','☕',
+  '📚','✏️','📖','📝','🖊️','📐','💻','🎧',
+  '🕌','🙏','🌙','😴','💤','🌅','☀️','🌤️',
+  '🏃','🤸','💪','⚽','🏊','🚴','🧘','🏋️',
+  '🎵','🎨','🎮','🎯','⭐','🏆','🔥','❤️',
+  '📋','🗓️','🌃','🏫','🏠','🚌','🎒','🛁',
+  '🍳','🥘','🍲','🫕','🥗','🍽️','🔪','🥄',
+  '🧑‍🍳','🧂','🫙','🫚','🧈','🥚','🥩','🍗',
+  '🥦','🥕','🧅','🧄','🌽','🍅','🥬','🫛',
+  '🍜','🍝','🍛','🥞','🧇','🥓','🫖','🧃',
+];
+
+const ROUTINE_TEMPLATES = [
+  { emoji:'☀️', name:'School Day Morning', tasks:[
+    {emoji:'⏰',name:'Wake Up',          desc:'',start:'06:30',end:'06:45',xp:10},
+    {emoji:'🚿',name:'Shower',           desc:'',start:'06:45',end:'07:00',xp:20},
+    {emoji:'👕',name:'Get Dressed',      desc:'',start:'07:00',end:'07:10',xp:10},
+    {emoji:'🕌',name:'Solat Subuh',      desc:'Face the qiblah and pray',start:'07:10',end:'07:25',xp:20},
+    {emoji:'🥣',name:'Breakfast',        desc:'Eat well — fuel up for school!',start:'07:25',end:'07:40',xp:10},
+    {emoji:'👟',name:'Socks & Shoes',    desc:'',start:'07:40',end:'07:45',xp:10},
+    {emoji:'🎒',name:'Leave for School', desc:'Have a great day!',start:'07:45',end:'07:50',xp:10},
+  ]},
+  { emoji:'🌙', name:'School Day Evening', tasks:[
+    {emoji:'🎒',name:'Store the Bag',           desc:'Hang it up properly',start:'13:30',end:'13:35',xp:10},
+    {emoji:'👕',name:'Dirty Clothes to Laundry',desc:'',start:'13:35',end:'13:40',xp:10},
+    {emoji:'🚿',name:'Shower',                  desc:'',start:'13:40',end:'14:00',xp:20},
+    {emoji:'🌙',name:'Get into Pyjama',         desc:'',start:'14:00',end:'14:10',xp:10},
+    {emoji:'🍽️',name:'Dinner',                  desc:'Eat together as a family',start:'18:30',end:'19:00',xp:10},
+    {emoji:'🕌',name:'Solat Maghrib',           desc:'',start:'19:00',end:'19:20',xp:20},
+    {emoji:'📚',name:'Homework / Study',        desc:'No distractions — full focus!',start:'19:20',end:'20:20',xp:20},
+    {emoji:'🚽',name:'Toilet',                  desc:'',start:'20:30',end:'20:35',xp:10},
+    {emoji:'🦷',name:'Brush Teeth',             desc:'2 full minutes!',start:'20:35',end:'20:40',xp:10},
+    {emoji:'🕌',name:'Solat Isyak',             desc:'',start:'20:40',end:'21:00',xp:20},
+    {emoji:'😴',name:'Sleep',                   desc:'Rest well, hero 💫',start:'21:00',end:'21:15',xp:10},
+  ]},
+];
+function makeRoutines() {
+  return ROUTINE_TEMPLATES.map(r=>({ id:genId(), emoji:r.emoji, name:r.name, tasks:r.tasks.map(t=>({...t,id:genId()})) }));
+}
+const DEFAULT_PLAYERS = [
+  { id:'p_0', name:'Uzaiyr', age:10, avatar:'🧑‍🚀', theme:0, routines:makeRoutines() },
+  { id:'p_1', name:'Imtiyaz', age:7,  avatar:'👦',   theme:1, routines:makeRoutines() },
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let players  = JSON.parse(localStorage.getItem('mr_players')  || 'null') || DEFAULT_PLAYERS;
+let sessions = JSON.parse(localStorage.getItem('mr_sessions') || '[]');
+let currentPid        = 0;
+let previewRoutineId  = null;
+let activeRoutine     = null;
+let activeTaskIdx     = 0;
+let sessionResults    = [];
+let sessionXP         = 0;
+let clockInterval     = null;
+let timerInterval     = null;
+let avatarPickerPid   = 0;
+let editorRoutineId   = null;
+let taskEmojiPickerIdx = null;
+let editorTasks       = [];
+let savedSessions     = {}; // pass-and-play
+let settingsViewPid   = 0;
+let calViewPid        = 0;
+let calViewYear       = 0;
+let calViewMonth      = 0;
+let detailDateKey     = null;
+let editSessionIdx    = null;
+let editResults       = [];
+let pinPendingAction  = null;
+let parentPin         = localStorage.getItem('mr_pin') || '1234';
+let peEditPid         = null; // null=new player, index=editing
+let peSelectedAvatar  = '🧑‍🚀';
+let peSelectedTheme   = 0;
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function getMYT() { return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kuala_Lumpur'})); }
+function todayKey() { const d=getMYT(); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
+function nowMins() { const n=getMYT(); return n.getHours()*60+n.getMinutes(); }
+function timeToMins(t) { const[h,m]=t.split(':').map(Number); return h*60+m; }
+function genId() { return '_'+Math.random().toString(36).slice(2,9); }
+function save(key,val) { localStorage.setItem(key,JSON.stringify(val)); }
+function todayXP(pid) {
+  const today=todayKey();
+  return sessions.filter(s=>s.date===today&&s.pid===pid).reduce((sum,s)=>sum+s.totalXP,0);
+}
+
+// ── VIEWS ────────────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  stopClock(); stopTimer();
+  if (name==='profile')    renderProfileSelect();
+  if (name==='home')       { startClock(); renderHome(); }
+  if (name==='parent')     { settingsViewPid=currentPid; renderParentSettings(); }
+  if (name==='calendar')   renderCalendar();
+  if (name==='day-detail') renderDayDetail();
+}
+function applyTheme(pid) { document.body.className = 'theme-'+(players[pid]?.theme ?? pid); }
+
+// ── PROFILE SELECT ───────────────────────────────────────────────────────────
+function renderProfileSelect() {
+  const c = document.getElementById('profile-cards-container');
+  if (!c) return;
+  const n    = players.length;
+  const cols = n <= 2 ? n : n === 3 ? 3 : 2;
+  c.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  c.innerHTML = players.map((p,i)=>`
+    <div class="profile-card profile-card-${p.theme}" onclick="selectProfile(${i})">
+      <div class="profile-avatar-lg">${p.avatar}</div>
+      <div class="profile-card-name">${p.name}</div>
+      <div class="profile-card-age">Age ${p.age}</div>
+    </div>`).join('');
+}
+function selectProfile(pid) { currentPid=pid; applyTheme(pid); showView('home'); }
+function goToProfileSelect() { showView('profile'); }
+
+// ── AVATAR PICKER ─────────────────────────────────────────────────────────────
+function openAvatarPicker(pid) {
+  avatarPickerPid = pid;
+  document.getElementById('ap-sub').textContent = `Pick ${players[pid].name}'s character`;
+  document.getElementById('avatar-grid').innerHTML = AVATAR_CATALOGUE.map(a=>`
+    <div class="avatar-opt ${players[pid].avatar===a.icon?'selected':''}" onclick="selectAvatarOpt(this,'${a.icon}')">
+      <div class="avatar-opt-icon">${a.icon}</div>
+      <div class="avatar-opt-label">${a.label}</div>
+    </div>`).join('');
+  document.getElementById('avatar-picker').classList.add('show');
+}
+function selectAvatarOpt(el, icon) {
+  document.querySelectorAll('.avatar-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  players[avatarPickerPid].avatar = icon;
+}
+function saveAvatar() {
+  save('mr_players', players);
+  document.getElementById('avatar-picker').classList.remove('show');
+  renderHome();
+}
+
+// ── CLOCK ────────────────────────────────────────────────────────────────────
+function startClock() { updateClock(); clockInterval = setInterval(updateClock, 1000); }
+function stopClock()  { clearInterval(clockInterval); clockInterval = null; }
+function updateClock() {
+  const n=getMYT(), h=String(n.getHours()).padStart(2,'0'), m=String(n.getMinutes()).padStart(2,'0'), s=String(n.getSeconds()).padStart(2,'0');
+  const el = document.getElementById('home-clock');
+  if (el) el.innerHTML = `${h}<span style="animation:blink 1s step-start infinite;display:inline-block">:</span>${m}<span class="home-clock-sec">:${s}</span>`;
+  const de = document.getElementById('home-date');
+  if (de) de.textContent = n.toLocaleDateString('en-MY',{weekday:'short',day:'numeric',month:'short'});
+}
+
+// ── WEEKLY CHART ─────────────────────────────────────────────────────────────
+function renderWeeklyXPHtml() {
+  const myt = getMYT();
+  const dow  = myt.getDay(); // 0=Sun … 6=Sat
+  const daysFromMon = dow === 0 ? 6 : dow - 1;
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(myt);
+    d.setDate(d.getDate() - daysFromMon + i);
+    const dk = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    const xp = sessions
+      .filter(s => s.pid === currentPid && s.date === dk)
+      .reduce((sum, s) => sum + s.totalXP, 0);
+    days.push({ dk, xp, label: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i] });
+  }
+  const todayDk  = todayKey();
+  const maxXP    = Math.max(...days.map(d => Math.max(0, d.xp)), 1);
+  const BAR_MAX  = 52;
+  const cols = days.map(d => {
+    const isToday = d.dk === todayDk;
+    const barH    = d.xp > 0 ? Math.max(5, Math.round((d.xp / maxXP) * BAR_MAX)) : 3;
+    return `<div class="wk-col${isToday ? ' today' : ''}">
+      <div class="wk-xp-label">${d.xp > 0 ? '+' + d.xp : ''}</div>
+      <div class="wk-bar" style="height:${barH}px"></div>
+      <div class="wk-day-label">${d.label}</div>
+    </div>`;
+  }).join('');
+  return `<div class="weekly-chart"><div class="weekly-bars">${cols}</div></div>`;
+}
+
+// ── HOME ─────────────────────────────────────────────────────────────────────
+function renderHome() {
+  const p = players[currentPid];
+  // avatar button
+  const ab = document.getElementById('home-avatar-btn');
+  if (ab) ab.textContent = p.avatar;
+  // greeting
+  const hrs = getMYT().getHours();
+  const greet = hrs < 12 ? 'Good morning,' : hrs < 17 ? 'Good afternoon,' : 'Good evening,';
+  const hi = document.getElementById('home-hi');
+  const pn = document.getElementById('home-player-name');
+  if (hi) hi.textContent = greet;
+  if (pn) pn.textContent = p.name;
+  // weekly chart + resume card + today XP chip
+  const xpArea = document.getElementById('home-xp-area');
+  const xp     = todayXP(currentPid);
+  let xpHtml   = renderWeeklyXPHtml();
+  const saved  = savedSessions[currentPid];
+  if (saved) {
+    const remaining = saved.routine.tasks.length - saved.taskIdx;
+    xpHtml += `<div class="resume-card" onclick="resumeSession()">
+      <div class="resume-icon">${saved.routine.emoji}</div>
+      <div class="resume-body">
+        <div class="resume-label">In Progress</div>
+        <div class="resume-name">${saved.routine.name}</div>
+        <div class="resume-prog">Task ${saved.taskIdx+1} of ${saved.routine.tasks.length} · ${remaining} left</div>
+      </div>
+      <div class="resume-arrow">▶</div>
+    </div>`;
+  }
+  if (xp > 0) xpHtml += `<div class="home-xp-chip">⚡ ${xp} XP earned today</div>`;
+  if (xpArea) xpArea.innerHTML = xpHtml;
+  // routines for this player
+  const list = document.getElementById('routines-list');
+  if (!list) return;
+  const myRoutines = players[currentPid]?.routines || [];
+  if (myRoutines.length === 0) {
+    list.innerHTML = `<div class="empty-routines">No routines yet.<br>Ask a parent to add some in ⚙️ Parent Settings.</div>`;
+    return;
+  }
+  list.innerHTML = myRoutines.map(r => {
+    const taskCount = r.tasks.length;
+    const totalXP   = r.tasks.reduce((s,t)=>s+t.xp,0);
+    const first     = r.tasks[0]?.start || '';
+    const last      = r.tasks[r.tasks.length-1]?.end || '';
+    const timeRange = first&&last ? `${first} – ${last}` : '';
+    return `<div class="routine-card" onclick="openPreview('${r.id}')">
+      <div class="routine-card-icon">${r.emoji}</div>
+      <div class="routine-card-body">
+        <div class="routine-card-name">${r.name}</div>
+        <div class="routine-card-meta">${taskCount} tasks &nbsp;·&nbsp; ${timeRange}</div>
+      </div>
+      <div class="routine-card-right">
+        <div class="routine-xp-badge">+${totalXP} XP</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── ROUTINE PREVIEW ──────────────────────────────────────────────────────────
+function openPreview(routineId) {
+  previewRoutineId = routineId;
+  const r = players[currentPid].routines.find(r=>r.id===routineId);
+  if (!r) return;
+  document.getElementById('preview-emoji').textContent  = r.emoji;
+  document.getElementById('preview-title').textContent  = r.name;
+  const totalXP   = r.tasks.reduce((s,t)=>s+t.xp,0);
+  const first     = r.tasks[0]?.start || '–';
+  const last      = r.tasks[r.tasks.length-1]?.end || '';
+  let durStr = '–';
+  if (first && last) {
+    const durMins = timeToMins(last) - timeToMins(first);
+    const durHrs  = Math.floor(durMins / 60);
+    const durMin  = durMins % 60;
+    durStr = durHrs > 0 ? (durMin > 0 ? `${durHrs}h ${durMin}m` : `${durHrs}h`) : `${durMins}m`;
+  }
+  document.getElementById('preview-info').innerHTML = `
+    <div class="preview-stat">
+      <div class="preview-stat-label">Tasks</div>
+      <div class="preview-stat-val">${r.tasks.length}</div>
+    </div>
+    <div class="preview-stat">
+      <div class="preview-stat-label">Max XP</div>
+      <div class="preview-stat-val">+${totalXP}</div>
+    </div>
+    <div class="preview-stat">
+      <div class="preview-stat-label">Duration</div>
+      <div class="preview-stat-val">${durStr}</div>
+    </div>`;
+  document.getElementById('preview-task-list').innerHTML = r.tasks.map((t,i)=>`
+    <div class="preview-task-row">
+      <div class="preview-task-num">${i+1}</div>
+      <div class="preview-task-emoji">${t.emoji}</div>
+      <div class="preview-task-info">
+        <div class="preview-task-name">${t.name}</div>
+        <div class="preview-task-window">${t.start} – ${t.end}</div>
+      </div>
+      <div class="preview-task-xp">+${t.xp}</div>
+    </div>`).join('');
+  showView('preview');
+}
+
+// ── ACTIVE TASK ───────────────────────────────────────────────────────────────
+function startRoutine() {
+  const r = players[currentPid].routines.find(r=>r.id===previewRoutineId);
+  if (!r || r.tasks.length===0) return;
+  activeRoutine  = r;
+  activeTaskIdx  = 0;
+  sessionResults = [];
+  sessionXP      = 0;
+  delete savedSessions[currentPid];
+  showView('active');
+  renderActiveTask();
+  startTimer();
+}
+
+function renderActiveTask() {
+  const task  = activeRoutine.tasks[activeTaskIdx];
+  const total = activeRoutine.tasks.length;
+  document.getElementById('active-progress-text').textContent = `Task ${activeTaskIdx+1} of ${total}`;
+  document.getElementById('active-progress-fill').style.width = ((activeTaskIdx/total)*100)+'%';
+  document.getElementById('active-xp-chip').textContent = sessionXP+(sessionXP>=0?' XP':' XP');
+  document.getElementById('active-task-emoji').textContent = task.emoji||'✅';
+  document.getElementById('active-task-name').textContent  = task.name;
+  document.getElementById('active-task-desc').textContent     = task.desc||'';
+  document.getElementById('active-task-xp-val').textContent = `+${task.xp} XP`;
+  document.getElementById('active-time-window').textContent   = `${task.start} – ${task.end}`;
+  // pass strip — show all other players as tappable avatar circles
+  const strip = document.getElementById('pass-strip');
+  const row2  = document.getElementById('pass-strip-row');
+  if (strip) {
+    const others = players.map((p,i)=>({p,i})).filter(x=>x.i!==currentPid);
+    strip.innerHTML = others.length
+      ? `<span class="pass-label">Switch</span>`
+        + others.map(x=>`<button type="button" class="pass-avatar-btn" onclick="passToPlayer(${x.i})" title="${x.p.name}">${x.p.avatar}</button>`).join('')
+      : '';
+    if (row2) row2.classList.toggle('visible', others.length > 0);
+  }
+  document.getElementById('btn-x').disabled    = false;
+  document.getElementById('btn-tick').disabled = false;
+  document.getElementById('active-main').classList.remove('fading');
+  const undoBtn = document.getElementById('undo-btn');
+  if (undoBtn) undoBtn.style.visibility = sessionResults.length > 0 ? 'visible' : 'hidden';
+  updateTaskTimer();
+}
+
+function undoPreviousTask() {
+  if (sessionResults.length === 0) return;
+  const last = sessionResults.pop();
+  sessionXP -= last.xp;
+  activeTaskIdx--;
+  renderActiveTask();
+}
+
+function cancelRoutine() {
+  if (!confirm('Cancel this routine? Your progress will not be saved.')) return;
+  stopTimer();
+  delete savedSessions[currentPid];
+  showView('home');
+}
+
+function startTimer()  { stopTimer(); updateTaskTimer(); timerInterval = setInterval(updateTaskTimer, 1000); }
+function stopTimer()   { clearInterval(timerInterval); timerInterval = null; }
+function updateTaskTimer() {
+  if (!activeRoutine) return;
+  const task = activeRoutine.tasks[activeTaskIdx];
+  if (!task) return;
+  const myt    = getMYT();
+  const nowM   = nowMins();
+  const nowSec = myt.getSeconds();
+  // live clock strip
+  const cs = document.getElementById('active-clock-strip');
+  if (cs) {
+    const h = String(myt.getHours()).padStart(2,'0');
+    const m = String(myt.getMinutes()).padStart(2,'0');
+    const s = String(nowSec).padStart(2,'0');
+    cs.innerHTML = `${h}<span class="blink">:</span>${m}<span class="sec">:${s}</span>`;
+  }
+  const startM = timeToMins(task.start);
+  const endM   = timeToMins(task.end);
+  const el     = document.getElementById('active-timer');
+  if (!el) return;
+  if (nowM < startM) {
+    const diff = startM - nowM;
+    const hrs  = Math.floor(diff / 60);
+    const mins = diff % 60;
+    const label = hrs > 0
+      ? (mins > 0 ? `${hrs} hr ${mins} min` : `${hrs} hr`)
+      : `${mins} min`;
+    el.textContent = `Starts in ${label}`;
+    el.className   = 'active-timer upcoming';
+  } else if (nowM <= endM) {
+    const secsLeft = Math.max(0, endM*60 - (myt.getHours()*3600 + myt.getMinutes()*60 + nowSec));
+    const mm = Math.floor(secsLeft/60), ss = secsLeft%60;
+    el.textContent = `${mm}:${String(ss).padStart(2,'0')} left ⚡ +10 bonus`;
+    el.className   = 'active-timer in-time';
+  } else {
+    el.textContent = '⌛ Overtime';
+    el.className   = 'active-timer past-time';
+  }
+}
+
+function handleTaskResult(type) {
+  const task   = activeRoutine.tasks[activeTaskIdx];
+  const nowM   = nowMins();
+  const startM = timeToMins(task.start);
+  const endM   = timeToMins(task.end);
+  let result, xpEarned;
+  if (type === 'negative') {
+    result = 'negative'; xpEarned = -task.xp;
+  } else {
+    const inWindow = nowM >= startM && nowM <= endM;
+    result   = inWindow ? 'bonus' : 'full';
+    xpEarned = inWindow ? task.xp + 10 : task.xp;
+  }
+  sessionResults.push({taskId:task.id, task, result, xp:xpEarned});
+  sessionXP += xpEarned;
+  // disable buttons
+  document.getElementById('btn-x').disabled    = true;
+  document.getElementById('btn-tick').disabled = true;
+  // float animation — gold for bonus, green for full, red for miss
+  const floatColor = result==='bonus' ? 'var(--gold)' : result==='negative' ? 'var(--red)' : 'var(--green)';
+  const btnEl = document.getElementById(type==='negative'?'btn-x':'btn-tick');
+  floatXP(xpEarned, btnEl, floatColor);
+  // bump chip
+  const chip = document.getElementById('active-xp-chip');
+  chip.textContent = sessionXP+' XP';
+  chip.classList.remove('bump'); void chip.offsetWidth; chip.classList.add('bump');
+  // fade and advance
+  setTimeout(() => {
+    document.getElementById('active-main').classList.add('fading');
+    setTimeout(() => {
+      activeTaskIdx++;
+      if (activeTaskIdx >= activeRoutine.tasks.length) { finishRoutine(); }
+      else { renderActiveTask(); }
+    }, 220);
+  }, 700);
+}
+
+function floatXP(xpDelta, originEl, color) {
+  const rect = originEl.getBoundingClientRect();
+  const el   = document.createElement('div');
+  el.className   = 'xp-float';
+  el.textContent = (xpDelta>=0?'+':'')+xpDelta+' XP';
+  el.style.color = color || (xpDelta > 0 ? 'var(--green)' : 'var(--red)');
+  el.style.left  = (rect.left + rect.width/2)+'px';
+  el.style.top   = (rect.top + 10)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1000);
+}
+
+// ── COMPLETE ─────────────────────────────────────────────────────────────────
+function finishRoutine() {
+  stopTimer();
+  delete savedSessions[currentPid];
+  const s = { date:todayKey(), pid:currentPid, routineId:activeRoutine.id, routineName:activeRoutine.name, results:sessionResults, totalXP:sessionXP };
+  sessions.push(s);
+  save('mr_sessions', sessions);
+  renderComplete();
+  showView('complete');
+}
+
+function renderComplete() {
+  document.getElementById('complete-avatar').textContent = players[currentPid].avatar;
+  const maxXP = activeRoutine.tasks.reduce((s,t)=>s+t.xp+10, 0); // max = all on-time with bonus
+  const pct   = maxXP > 0 ? (sessionXP/maxXP)*100 : 0;
+  const pname = players[currentPid].name;
+  let title, msg;
+  if      (pct>=90) { title='EXCELLENT! 🌟'; msg=`Good job, ${pname}! You crushed every mission!`; }
+  else if (pct>=70) { title='GREAT JOB! 🎉';  msg=`Really impressive, ${pname}! Keep it up!`; }
+  else if (pct>=50) { title='GOOD EFFORT 💪';  msg=`Decent run, ${pname} — push a bit harder next time!`; }
+  else if (pct>=20) { title='TRY HARDER 📈';   msg=`You can do better, ${pname}. Stay focused!`; }
+  else              { title='MUST DO BETTER';  msg=`More effort needed, ${pname}. Come back stronger! 💪`; }
+  document.getElementById('complete-title').textContent = title;
+  document.getElementById('complete-msg').textContent   = msg;
+  const xpEl = document.getElementById('complete-xp');
+  xpEl.textContent  = (sessionXP>=0?'+':'')+sessionXP+' XP';
+  xpEl.className    = 'complete-xp'+(sessionXP<0?' neg':'');
+  document.getElementById('complete-breakdown').innerHTML = sessionResults.map(r=>{
+    const label = r.result==='bonus'?'⚡ On Time':r.result==='full'?'✓ Done':'✗ Missed';
+    const col   = r.result==='bonus'?'var(--gold)':r.xp>0?'var(--green)':'var(--red)';
+    return `<div class="bd-row">
+      <div class="bd-emoji">${r.task.emoji||'✅'}</div>
+      <div class="bd-name">${r.task.name}</div>
+      <div class="bd-badge ${r.result}">${label}</div>
+      <div class="bd-xp" style="color:${col}">${r.xp>=0?'+':''}${r.xp}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── PARENT SETTINGS ───────────────────────────────────────────────────────────
+function renderParentSettings() {
+  renderParentPlayers();
+  renderSettingsTabs();
+  renderParentRoutines();
+}
+function renderParentPlayers() {
+  const el = document.getElementById('parent-player-list');
+  if (!el) return;
+  el.innerHTML = players.map((p,i)=>`
+    <div class="player-mgmt-card">
+      <div class="player-mgmt-av">${p.avatar}</div>
+      <div class="player-mgmt-info">
+        <div class="player-mgmt-name">${p.name}</div>
+        <div class="player-mgmt-meta">Age ${p.age} · ${p.routines.length} routines</div>
+      </div>
+      <button type="button" class="icon-btn" onclick="openPlayerEditor(${i})">✏️</button>
+    </div>`).join('');
+  const addBtn = document.getElementById('add-player-btn');
+  if (addBtn) addBtn.style.display = players.length >= 4 ? 'none' : '';
+}
+function renderSettingsTabs() {
+  const el = document.getElementById('settings-ptabs');
+  if (!el) return;
+  el.innerHTML = players.map((p,i)=>`
+    <button type="button" class="settings-ptab ${i===settingsViewPid?'active':''}" onclick="switchSettingsPlayer(${i})">${p.avatar} ${p.name}</button>`).join('');
+}
+function switchSettingsPlayer(pid) { settingsViewPid=pid; renderSettingsTabs(); renderParentRoutines(); }
+function renderParentRoutines() {
+  const el = document.getElementById('parent-routine-list');
+  if (!el) return;
+  const myR = players[settingsViewPid]?.routines || [];
+  el.innerHTML = myR.length===0
+    ? `<p style="color:var(--muted);font-size:14px;margin-bottom:1rem">No routines yet. Add one below.</p>`
+    : myR.map(r=>`
+      <div class="parent-routine-card">
+        <div class="parent-routine-top">
+          <div class="drag-handle">≡</div>
+          <div class="parent-routine-icon">${r.emoji}</div>
+          <div class="parent-routine-info">
+            <div class="parent-routine-name">${r.name}</div>
+            <div class="parent-routine-tasks">${r.tasks.length} tasks · ${r.tasks.reduce((s,t)=>s+t.xp,0)} XP max</div>
+          </div>
+        </div>
+        <div class="parent-routine-actions">
+          <button type="button" class="icon-btn" onclick="duplicateRoutine('${r.id}')" title="Duplicate">⧉ Duplicate</button>
+          <button type="button" class="icon-btn" onclick="openCopyMenu('${r.id}')" title="Copy to player">→ Copy</button>
+          <button type="button" class="icon-btn" onclick="openEditor('${r.id}')">✏️ Edit</button>
+          <button type="button" class="icon-btn danger" onclick="deleteRoutine('${r.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  initRoutineDrag();
+}
+function deleteRoutine(id) {
+  if (!confirm('Delete this routine?')) return;
+  players[settingsViewPid].routines = players[settingsViewPid].routines.filter(r=>r.id!==id);
+  save('mr_players', players);
+  renderParentRoutines();
+}
+function duplicateRoutine(id) {
+  const src = players[settingsViewPid].routines.find(r=>r.id===id);
+  if (!src) return;
+  const clone = { ...src, id:genId(), name:src.name+' (Copy)', tasks:src.tasks.map(t=>({...t,id:genId()})) };
+  players[settingsViewPid].routines.push(clone);
+  save('mr_players', players);
+  renderParentRoutines();
+}
+function openCopyMenu(routineId) {
+  const targets = players.map((p,i)=>({p,i})).filter(x=>x.i!==settingsViewPid);
+  if (targets.length===0) { alert('No other players to copy to. Add more players first.'); return; }
+  const names = targets.map((x,i)=>`${i+1}: ${x.p.name}`).join('\n');
+  const choice = prompt(`Copy routine to which player?\n${names}\n\nEnter number:`);
+  if (!choice) return;
+  const idx = parseInt(choice)-1;
+  if (idx<0||idx>=targets.length) { alert('Invalid choice.'); return; }
+  const toPid = targets[idx].i;
+  const src   = players[settingsViewPid].routines.find(r=>r.id===routineId);
+  if (!src) return;
+  const clone = { ...src, id:genId(), tasks:src.tasks.map(t=>({...t,id:genId()})) };
+  players[toPid].routines.push(clone);
+  save('mr_players', players);
+  alert(`✅ Copied to ${players[toPid].name}!`);
+}
+
+// ── TASK EMOJI PICKER ────────────────────────────────────────────────────────
+function openEmojiPickerOverlay() {
+  document.getElementById('task-emoji-grid').innerHTML = TASK_EMOJIS.map(e =>
+    `<button type="button" class="task-emoji-opt" onclick="selectTaskEmoji('${e}')">${e}</button>`
+  ).join('');
+  document.getElementById('overlay-task-emoji').classList.add('show');
+}
+function openTaskEmojiPicker(idx) {
+  syncEditorFromDOM();
+  taskEmojiPickerIdx = idx;
+  openEmojiPickerOverlay();
+}
+function openRoutineEmojiPicker() {
+  taskEmojiPickerIdx = 'routine';
+  openEmojiPickerOverlay();
+}
+function selectTaskEmoji(emoji) {
+  if (taskEmojiPickerIdx === 'routine') {
+    const btn = document.getElementById('editor-emoji-btn');
+    if (btn) btn.textContent = emoji;
+  } else if (taskEmojiPickerIdx !== null) {
+    editorTasks[taskEmojiPickerIdx].emoji = emoji;
+    renderEditorTasks();
+  }
+  closeTaskEmojiPicker();
+}
+function closeTaskEmojiPicker() {
+  document.getElementById('overlay-task-emoji').classList.remove('show');
+}
+
+// ── ROUTINE EDITOR ────────────────────────────────────────────────────────────
+function openEditor(routineId) {
+  editorRoutineId = routineId;
+  if (routineId) {
+    const r = players[settingsViewPid].routines.find(r=>r.id===routineId);
+    document.getElementById('editor-title').textContent = 'Edit Routine';
+    document.getElementById('editor-name').value  = r.name;
+    document.getElementById('editor-emoji-btn').textContent = r.emoji||'📋';
+    editorTasks = r.tasks.map(t=>({...t}));
+  } else {
+    document.getElementById('editor-title').textContent = 'New Routine';
+    document.getElementById('editor-name').value  = '';
+    document.getElementById('editor-emoji-btn').textContent = '📋';
+    editorTasks = [];
+  }
+  renderEditorTasks();
+  document.getElementById('overlay-editor').classList.add('show');
+}
+
+function closeEditor() {
+  document.getElementById('overlay-editor').classList.remove('show');
+}
+
+function syncEditorFromDOM() {
+  editorTasks.forEach((task,i) => {
+    const n = v(`et-name-${i}`), d = v(`et-desc-${i}`);
+    const s  = v(`et-start-${i}`), en = v(`et-end-${i}`);
+    const xv = document.getElementById(`et-xp-val-${i}`);
+    if (n)  task.name  = n.value;
+    if (d)  task.desc  = d.value;
+    if (s)  task.start = s.value;
+    if (en) task.end   = en.value;
+    if (xv) task.xp    = parseInt(xv.textContent)||task.xp;
+  });
+}
+function v(id) { return document.getElementById(id); }
+
+function renderEditorTasks() {
+  const el = document.getElementById('editor-task-list');
+  if (!el) return;
+  el.innerHTML = editorTasks.map((t,i)=>`
+    <div class="et-card">
+      <div class="et-top">
+        <div class="drag-handle">≡</div>
+        <div class="et-num">${i+1}</div>
+        <button type="button" class="et-emoji-btn" id="et-emoji-${i}" onclick="openTaskEmojiPicker(${i})">${t.emoji||'✅'}</button>
+        <input class="et-name"  id="et-name-${i}"  placeholder="Task name" value="${t.name}">
+        <button class="et-del"  onclick="removeEditorTask(${i})">✕</button>
+      </div>
+      <textarea class="et-desc" id="et-desc-${i}" rows="2" placeholder="Description (optional — shown to player during task)">${t.desc||''}</textarea>
+      <div class="et-bottom">
+        <div>
+          <span class="et-field-label">Start</span>
+          <input class="et-time" id="et-start-${i}" type="time" value="${t.start}">
+        </div>
+        <div>
+          <span class="et-field-label">End</span>
+          <input class="et-time" id="et-end-${i}" type="time" value="${t.end}">
+        </div>
+        <div>
+          <span class="et-field-label">XP (×10)</span>
+          <div class="xp-stepper">
+            <button type="button" class="sp-btn" onclick="adjustXP(${i},-10)">−</button>
+            <span class="sp-val" id="et-xp-val-${i}">${t.xp}</span>
+            <button type="button" class="sp-btn" onclick="adjustXP(${i},10)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  initTaskDrag();
+}
+
+function addEditorTask() {
+  syncEditorFromDOM();
+  editorTasks.push({id:genId(), emoji:'✅', name:'', desc:'', start:'08:00', end:'08:15', xp:10});
+  renderEditorTasks();
+  setTimeout(()=>{ const el=document.querySelector('.editor-scroll'); if(el) el.scrollTop=el.scrollHeight; },50);
+}
+
+function removeEditorTask(idx) {
+  syncEditorFromDOM();
+  editorTasks.splice(idx,1);
+  renderEditorTasks();
+}
+
+// ── DRAG-AND-DROP REORDER ─────────────────────────────────────────────────────
+let dragState = null;
+
+function startDragItem(e, containerSel, itemSel, idx) {
+  e.preventDefault();
+  const container = document.querySelector(containerSel);
+  const allItems  = [...container.querySelectorAll(itemSel)];
+  const item      = allItems[idx];
+  const rect      = item.getBoundingClientRect();
+  const clientY   = e.touches ? e.touches[0].clientY : e.clientY;
+  const snapRects = allItems.map(c => c.getBoundingClientRect());
+
+  const ghost = item.cloneNode(true);
+  ghost.id    = 'drag-ghost';
+  ghost.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;z-index:500;pointer-events:none;box-shadow:0 12px 40px rgba(0,0,0,0.6);transform:scale(1.02);opacity:0.97;border-radius:14px;transition:none;`;
+  document.body.appendChild(ghost);
+  item.classList.add('drag-item-source');
+
+  dragState = { containerSel, itemSel, idx, startY:clientY, ghostTop:rect.top, snapRects, count:allItems.length, targetIdx:idx };
+
+  document.addEventListener('mousemove', onDragMove, { passive:false });
+  document.addEventListener('mouseup',   onDragEnd);
+  document.addEventListener('touchmove', onDragMove, { passive:false });
+  document.addEventListener('touchend',  onDragEnd);
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  e.preventDefault();
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const dy      = clientY - dragState.startY;
+  const ghost   = document.getElementById('drag-ghost');
+  if (!ghost) return;
+  ghost.style.top = (dragState.ghostTop + dy) + 'px';
+
+  const mid      = dragState.ghostTop + dy + ghost.offsetHeight / 2;
+  let newTarget  = dragState.idx;
+  dragState.snapRects.forEach((r, i) => { if (mid > r.top + r.height / 2) newTarget = i; });
+  newTarget = Math.max(0, Math.min(dragState.count - 1, newTarget));
+
+  if (newTarget !== dragState.targetIdx) {
+    dragState.targetIdx = newTarget;
+    const container = document.querySelector(dragState.containerSel);
+    [...container.querySelectorAll(dragState.itemSel)].forEach((c, i) => {
+      c.classList.toggle('drag-item-target', i === newTarget && i !== dragState.idx);
+    });
+  }
+}
+
+function onDragEnd() {
+  if (!dragState) return;
+  const ghost = document.getElementById('drag-ghost');
+  if (ghost) ghost.remove();
+  const container = document.querySelector(dragState.containerSel);
+  [...container.querySelectorAll(dragState.itemSel)].forEach(c =>
+    c.classList.remove('drag-item-source', 'drag-item-target'));
+
+  const { containerSel, idx:from, targetIdx:to } = dragState;
+  dragState = null;
+  document.removeEventListener('mousemove', onDragMove);
+  document.removeEventListener('mouseup',   onDragEnd);
+  document.removeEventListener('touchmove', onDragMove);
+  document.removeEventListener('touchend',  onDragEnd);
+
+  if (from === to) return;
+  if (containerSel === '#editor-task-list') {
+    const [moved] = editorTasks.splice(from, 1);
+    editorTasks.splice(to, 0, moved);
+    renderEditorTasks();
+  } else if (containerSel === '#parent-routine-list') {
+    const routines = players[settingsViewPid].routines;
+    const [moved] = routines.splice(from, 1);
+    routines.splice(to, 0, moved);
+    save('mr_players', players);
+    renderParentRoutines();
+  }
+}
+
+function initTaskDrag() {
+  const el = document.getElementById('editor-task-list');
+  if (!el) return;
+  el.querySelectorAll('.et-card').forEach((card, idx) => {
+    const h = card.querySelector('.drag-handle');
+    if (!h) return;
+    h.addEventListener('mousedown',  e => startDragItem(e, '#editor-task-list', '.et-card', idx));
+    h.addEventListener('touchstart', e => startDragItem(e, '#editor-task-list', '.et-card', idx), { passive:false });
+  });
+}
+
+function initRoutineDrag() {
+  const el = document.getElementById('parent-routine-list');
+  if (!el) return;
+  el.querySelectorAll('.parent-routine-card').forEach((card, idx) => {
+    const h = card.querySelector('.drag-handle');
+    if (!h) return;
+    h.addEventListener('mousedown',  e => startDragItem(e, '#parent-routine-list', '.parent-routine-card', idx));
+    h.addEventListener('touchstart', e => startDragItem(e, '#parent-routine-list', '.parent-routine-card', idx), { passive:false });
+  });
+}
+
+function adjustXP(idx, delta) {
+  syncEditorFromDOM();
+  editorTasks[idx].xp = Math.max(10, Math.min(200, editorTasks[idx].xp+delta));
+  renderEditorTasks();
+}
+
+function saveRoutine() {
+  syncEditorFromDOM();
+  const name  = document.getElementById('editor-name').value.trim();
+  const emoji = (document.getElementById('editor-emoji-btn').textContent || '').trim() || '📋';
+  if (!name)              { alert('Please enter a routine name.'); return; }
+  if (editorTasks.length===0) { alert('Please add at least one task.'); return; }
+  if (editorTasks.some(t=>!t.name.trim())) { alert('All tasks need a name.'); return; }
+  const pRoutines = players[settingsViewPid].routines;
+  if (editorRoutineId) {
+    const idx = pRoutines.findIndex(r=>r.id===editorRoutineId);
+    if (idx>=0) pRoutines[idx] = {...pRoutines[idx], emoji, name, tasks:editorTasks};
+  } else {
+    pRoutines.push({id:genId(), emoji, name, tasks:editorTasks});
+  }
+  save('mr_players', players);
+  closeEditor();
+  renderParentRoutines();
+}
+
+// ── PASS-AND-PLAY ─────────────────────────────────────────────────────────────
+function saveCurrentSession() {
+  if (!activeRoutine) return;
+  savedSessions[currentPid] = {
+    routine: activeRoutine,
+    taskIdx: activeTaskIdx,
+    results: [...sessionResults],
+    xp: sessionXP,
+  };
+}
+function restoreSession(pid) {
+  const s = savedSessions[pid];
+  if (!s) return false;
+  activeRoutine  = s.routine;
+  activeTaskIdx  = s.taskIdx;
+  sessionResults = [...s.results];
+  sessionXP      = s.xp;
+  return true;
+}
+function passToPlayer(pid) {
+  saveCurrentSession();
+  currentPid = pid;
+  applyTheme(pid);
+  if (restoreSession(pid)) {
+    showView('active');
+    renderActiveTask();
+    startTimer();
+  } else {
+    showView('home');
+  }
+}
+function resumeSession() {
+  if (!restoreSession(currentPid)) return;
+  showView('active');
+  renderActiveTask();
+  startTimer();
+}
+
+// ── PLAYER EDITOR ────────────────────────────────────────────────────────────
+const THEME_NAMES = ['Blue','Cyan','Green','Orange','Purple','Pink','Red','Gold'];
+function openPlayerEditor(pidxOrNull) {
+  peEditPid = pidxOrNull;
+  const isNew = pidxOrNull === null;
+  document.getElementById('pe-title').textContent = isNew ? 'New Player' : 'Edit Player';
+  const p = isNew ? { name:'', age:'', avatar:'🧑‍🚀', theme: players.length % 4 } : players[pidxOrNull];
+  peSelectedAvatar = p.avatar;
+  peSelectedTheme  = p.theme ?? 0;
+  document.getElementById('pe-name').value = p.name;
+  document.getElementById('pe-age').value  = p.age || '';
+  // avatar grid
+  document.getElementById('pe-avatar-grid').innerHTML = AVATAR_CATALOGUE.map(a=>`
+    <div class="avatar-opt ${peSelectedAvatar===a.icon?'selected':''}" onclick="peSelectAvatar(this,'${a.icon}')">
+      <div class="avatar-opt-icon">${a.icon}</div>
+      <div class="avatar-opt-label">${a.label}</div>
+    </div>`).join('');
+  renderThemeSwatches();
+  // footer — show delete only when editing
+  const footer = document.getElementById('pe-footer');
+  footer.innerHTML = (!isNew ? `<button type="button" class="icon-btn danger" style="margin-bottom:8px;width:100%;padding:10px" onclick="deletePlayer(${pidxOrNull})">🗑️ Remove ${p.name}</button>` : '')
+    + `<button type="button" class="save-btn-full" onclick="savePlayerEditor()">Save Player</button>`;
+  document.getElementById('overlay-player-editor').classList.add('show');
+}
+function peSelectAvatar(el, icon) {
+  document.querySelectorAll('#pe-avatar-grid .avatar-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  peSelectedAvatar = icon;
+}
+function peSelectTheme(theme) {
+  peSelectedTheme = theme;
+  renderThemeSwatches();
+}
+function renderThemeSwatches() {
+  document.getElementById('pe-theme-swatches').innerHTML = THEME_COLORS.map((col,i)=>`
+    <div class="theme-swatch ${i===peSelectedTheme?'selected':''}" style="background:${col}" onclick="peSelectTheme(${i})" title="${THEME_NAMES[i]}"></div>`).join('');
+}
+function closePlayerEditor() { document.getElementById('overlay-player-editor').classList.remove('show'); }
+function savePlayerEditor() {
+  const name = document.getElementById('pe-name').value.trim();
+  const age  = parseInt(document.getElementById('pe-age').value) || 0;
+  if (!name) { alert('Please enter a name.'); return; }
+  if (peEditPid === null) {
+    if (players.length >= 4) { alert('Maximum 4 players reached.'); return; }
+    players.push({ id:genId(), name, age, avatar:peSelectedAvatar, theme:peSelectedTheme, routines:[] });
+  } else {
+    players[peEditPid] = { ...players[peEditPid], name, age, avatar:peSelectedAvatar, theme:peSelectedTheme };
+  }
+  save('mr_players', players);
+  closePlayerEditor();
+  renderParentPlayers();
+  renderSettingsTabs();
+  renderProfileSelect();
+}
+function deletePlayer(pidx) {
+  if (!confirm(`Remove ${players[pidx].name}? All their routines will be deleted.`)) return;
+  players.splice(pidx, 1);
+  if (settingsViewPid >= players.length) settingsViewPid = Math.max(0, players.length-1);
+  save('mr_players', players);
+  closePlayerEditor();
+  renderParentSettings();
+  renderProfileSelect();
+}
+
+// ── DATE HELPERS ─────────────────────────────────────────────────────────────
+function dkToDate(dk) { const [y,m,d]=dk.split('-').map(Number); return new Date(y,m,d); }
+function htmlToDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+
+// ── CALENDAR ─────────────────────────────────────────────────────────────────
+function openCalendar() {
+  const myt    = getMYT();
+  calViewPid   = currentPid;
+  calViewYear  = myt.getFullYear();
+  calViewMonth = myt.getMonth();
+  showView('calendar');
+}
+function calSwitchPlayer(pid) { calViewPid=pid; renderCalendar(); }
+function renderCalPlayerTabs() {
+  const el = document.getElementById('cal-player-tabs');
+  if (!el) return;
+  el.innerHTML = players.map((p,i)=>`
+    <button type="button" class="cal-ptab ${i===calViewPid?'active':''}" onclick="calSwitchPlayer(${i})">${p.avatar} ${p.name}</button>`).join('');
+}
+function calPrevMonth() {
+  calViewMonth--;
+  if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+  renderCalendar();
+}
+function calNextMonth() {
+  calViewMonth++;
+  if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+  renderCalendar();
+}
+function renderCalendar() {
+  renderCalPlayerTabs();
+  const yr = calViewYear, mo = calViewMonth;
+  document.getElementById('cal-month-title').textContent = `${MONTHS[mo]} ${yr}`;
+  const myt      = getMYT();
+  const todayDk  = `${myt.getFullYear()}-${myt.getMonth()}-${myt.getDate()}`;
+  const rawDOW   = new Date(yr, mo, 1).getDay(); // 0=Sun … 6=Sat
+  const firstDOW = rawDOW === 0 ? 6 : rawDOW - 1; // shift so Monday=0
+  const daysInMo = new Date(yr, mo + 1, 0).getDate();
+  let html = '';
+  for (let i = 0; i < firstDOW; i++) html += '<div class="cal-day cal-empty"></div>';
+  for (let d = 1; d <= daysInMo; d++) {
+    const dk       = `${yr}-${mo}-${d}`;
+    const daySess  = sessions.filter(s => s.pid===calViewPid && s.date===dk);
+    const xpTotal  = daySess.reduce((sum, s) => sum + s.totalXP, 0);
+    const hasData  = daySess.length > 0;
+    const isToday  = dk === todayDk;
+    const xpStr    = xpTotal >= 0 ? `+${xpTotal}` : `${xpTotal}`;
+    html += `<div class="cal-day${hasData?' cal-has-data':''}${isToday?' cal-today':''}"${hasData?` onclick="showDayDetail('${dk}')"`:''}>`
+          + `<div class="cal-day-num">${d}</div>`
+          + (hasData ? `<div class="cal-day-xp${xpTotal<0?' neg':''}">${xpStr}</div>` : '')
+          + `</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+  const moSess = sessions.filter(s => s.pid===calViewPid && (() => { const p=s.date.split('-'); return +p[0]===yr && +p[1]===mo; })());
+  const moXP   = moSess.reduce((sum, s) => sum + s.totalXP, 0);
+  const totEl  = document.getElementById('cal-month-total');
+  totEl.textContent = (moXP >= 0 ? '+' : '') + moXP + ' XP';
+  totEl.className   = 'cal-summary-xp' + (moXP < 0 ? ' neg' : '');
+}
+
+// ── DATE RANGE TOTAL ─────────────────────────────────────────────────────────
+function updateRangeTotal() {
+  const startVal = document.getElementById('range-start')?.value;
+  const endVal   = document.getElementById('range-end')?.value;
+  const area     = document.getElementById('range-result-area');
+  if (!area) return;
+  if (!startVal || !endVal) {
+    area.innerHTML = '<div class="range-hint">Pick a start and end date above</div>';
+    return;
+  }
+  if (startVal > endVal) {
+    area.innerHTML = '<div class="range-hint" style="color:var(--red)">End date must be after start date</div>';
+    return;
+  }
+  const start = htmlToDate(startVal);
+  const end   = htmlToDate(endVal);
+  const rows  = players.map((p, pid) => { const name = p.name;
+    const xp = sessions
+      .filter(s => s.pid===pid && (() => { const d=dkToDate(s.date); return d>=start && d<=end; })())
+      .reduce((sum, s) => sum + s.totalXP, 0);
+    const sign = xp >= 0 ? '+' : '';
+    return `<div class="range-player-row">
+      <div class="range-player-name">${name}</div>
+      <div class="range-player-xp${xp<0?' neg':''}">${sign}${xp} XP</div>
+    </div>`;
+  }).join('');
+  const combined = sessions
+    .filter(s => (() => { const d=dkToDate(s.date); return d>=start && d<=end; })())
+    .reduce((sum, s) => sum + s.totalXP, 0);
+  area.innerHTML = `<div class="range-result">
+    ${rows}
+    <hr class="range-divider">
+    <div class="range-combined-row">
+      <div class="range-combined-label">Combined</div>
+      <div class="range-combined-xp">${combined>=0?'+':''}${combined} XP</div>
+    </div>
+  </div>`;
+}
+
+// ── DAY DETAIL ────────────────────────────────────────────────────────────────
+function showDayDetail(dateKey) {
+  detailDateKey = dateKey;
+  const p = dateKey.split('-');
+  const d = new Date(+p[0], +p[1], +p[2]);
+  document.getElementById('detail-date-title').textContent =
+    d.toLocaleDateString('en-MY', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  showView('day-detail');
+}
+function renderDayDetail() {
+  if (!detailDateKey) return;
+  const daySess = sessions.filter(s => s.pid===calViewPid && s.date===detailDateKey);
+  const body    = document.getElementById('detail-body');
+  if (!body) return;
+  if (daySess.length === 0) {
+    body.innerHTML = '<div class="detail-empty">No activity recorded on this day.</div>';
+    return;
+  }
+  body.innerHTML = daySess.map(sess => {
+    const globalIdx = sessions.indexOf(sess);
+    const xpSign    = sess.totalXP >= 0 ? '+' : '';
+    const taskRows  = sess.results.map(r => {
+      const label    = r.result==='bonus' ? '⚡ On Time' : r.result==='full' ? '✓ Done' : '✗ Missed';
+      const xpColor  = r.xp > 0 ? (r.result==='bonus' ? 'var(--gold)' : 'var(--green)') : 'var(--red)';
+      const xpStr    = (r.xp >= 0 ? '+' : '') + r.xp;
+      return `<div class="detail-task-row">
+        <div class="detail-task-emoji">${r.task?.emoji||'✅'}</div>
+        <div class="detail-task-name">${r.task?.name||r.taskId}</div>
+        <div class="detail-task-badge ${r.result}">${label}</div>
+        <div class="detail-task-xp" style="color:${xpColor}">${xpStr}</div>
+      </div>`;
+    }).join('');
+    return `<div class="detail-session">
+      <div class="detail-session-header">
+        <div class="detail-session-name">${sess.routineName}</div>
+        <div class="detail-session-xp${sess.totalXP<0?' neg':''}">${xpSign}${sess.totalXP} XP</div>
+      </div>
+      ${taskRows}
+      <button type="button" class="detail-edit-btn" onclick="requestParentEdit(${globalIdx})">🔒 Edit Record</button>
+    </div>`;
+  }).join('');
+}
+
+// ── PARENT EDIT ───────────────────────────────────────────────────────────────
+function requestParentEdit(sessionIdx) {
+  editSessionIdx = sessionIdx;
+  pinPendingAction = () => openDayEdit(sessionIdx);
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('overlay-pin').classList.add('show');
+  setTimeout(() => document.getElementById('pin-input').focus(), 120);
+}
+function closePin() { document.getElementById('overlay-pin').classList.remove('show'); }
+function submitPin() {
+  const entered = document.getElementById('pin-input').value;
+  if (entered === parentPin) {
+    closePin();
+    if (pinPendingAction) { pinPendingAction(); pinPendingAction = null; }
+  } else {
+    document.getElementById('pin-error').textContent = 'Incorrect PIN — try again.';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-input').focus();
+  }
+}
+function openDayEdit(sessionIdx) {
+  const sess = sessions[sessionIdx];
+  document.getElementById('day-edit-title').textContent = sess.routineName;
+  editResults = sess.results.map(r => ({...r}));
+  renderDayEditBody();
+  document.getElementById('overlay-day-edit').classList.add('show');
+}
+function closeDayEdit() { document.getElementById('overlay-day-edit').classList.remove('show'); }
+function setEditResult(idx, result) {
+  const task = editResults[idx].task;
+  editResults[idx].result = result;
+  editResults[idx].xp     = result==='bonus' ? task.xp+10 : result==='full' ? task.xp : -task.xp;
+  renderDayEditBody();
+}
+function renderDayEditBody() {
+  const totalXP = editResults.reduce((s, r) => s + r.xp, 0);
+  const rows = editResults.map((r, i) => {
+    const xpColor = r.xp > 0 ? (r.result==='bonus' ? 'var(--gold)' : 'var(--green)') : 'var(--red)';
+    const xpStr   = (r.xp >= 0 ? '+' : '') + r.xp;
+    return `<div class="edit-task-row">
+      <div class="edit-task-emoji">${r.task?.emoji||'✅'}</div>
+      <div class="edit-task-name">${r.task?.name||r.taskId}</div>
+      <div class="edit-result-btns">
+        <button type="button" class="erb${r.result==='bonus'?' sel-bonus':''}"    onclick="setEditResult(${i},'bonus')">⚡</button>
+        <button type="button" class="erb${r.result==='full'?' sel-full':''}"      onclick="setEditResult(${i},'full')">✓</button>
+        <button type="button" class="erb${r.result==='negative'?' sel-negative':''}" onclick="setEditResult(${i},'negative')">✕</button>
+      </div>
+      <div class="edit-task-xp" style="color:${xpColor}">${xpStr}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('day-edit-body').innerHTML = rows
+    + `<div class="edit-total-row">
+        <div class="edit-total-label">New Total</div>
+        <div class="edit-total-xp${totalXP<0?' neg':''}">${totalXP>=0?'+':''}${totalXP} XP</div>
+       </div>`;
+}
+function saveDayEdit() {
+  const totalXP = editResults.reduce((s, r) => s + r.xp, 0);
+  sessions[editSessionIdx].results = editResults;
+  sessions[editSessionIdx].totalXP = totalXP;
+  save('mr_sessions', sessions);
+  closeDayEdit();
+  renderDayDetail();
+  renderCalendar(); // refresh calendar dots/totals
+}
+function saveParentPin() {
+  const val = document.getElementById('pin-change-input').value.trim();
+  if (!/^\d{4}$/.test(val)) { alert('PIN must be exactly 4 digits.'); return; }
+  parentPin = val;
+  localStorage.setItem('mr_pin', parentPin);
+  document.getElementById('pin-change-input').value = '';
+  alert('✅ PIN updated!');
+}
+
+// ── BLINK KEYFRAME (inline for home clock) ───────────────────────────────────
+const blinkStyle = document.createElement('style');
+blinkStyle.textContent = '@keyframes blink{50%{opacity:0.15}}';
+document.head.appendChild(blinkStyle);
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderProfileSelect();
+showView('profile');
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
