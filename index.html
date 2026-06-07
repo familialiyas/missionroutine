@@ -430,8 +430,11 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 .detail-task-badge.full     { background:var(--green-soft); color:var(--green); }
 .detail-task-badge.negative { background:var(--red-soft); color:var(--red); }
 .detail-task-xp { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; flex-shrink:0; min-width:40px; text-align:right; }
-.detail-edit-btn { width:100%; margin-top:0.75rem; padding:9px; background:none; border:1px solid var(--border); border-radius:11px; color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.detail-action-row { display:flex; gap:8px; margin-top:0.75rem; }
+.detail-edit-btn { flex:1; padding:9px; background:none; border:1px solid var(--border); border-radius:11px; color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.15s; }
 .detail-edit-btn:hover { border-color:var(--purple); color:var(--text); }
+.detail-delete-btn { flex:1; padding:9px; background:none; border:1px solid rgba(255,91,91,0.3); border-radius:11px; color:var(--red); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.detail-delete-btn:hover { border-color:var(--red); background:var(--red-soft); }
 .detail-empty { text-align:center; padding:3rem 1rem; color:var(--muted); font-size:14px; }
 /* ── DAY EDIT ── */
 .edit-task-row { display:flex; align-items:center; gap:8px; padding:0.7rem 0; border-bottom:1px solid var(--border); }
@@ -475,7 +478,7 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
   <div class="app-title">Mission Routine</div>
   <div class="app-tagline">Who's doing missions today?</div>
   <div class="profile-cards" id="profile-cards-container"></div>
-  <button class="parent-btn" onclick="showView('parent')">⚙️ Parent Settings</button>
+  <button class="parent-btn" onclick="requestParentAccess()">⚙️ Parent Settings</button>
 </div>
 
 <!-- AVATAR PICKER -->
@@ -751,9 +754,19 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 <script>
 // ── CATALOGUE ────────────────────────────────────────────────────────────────
 const AVATAR_CATALOGUE = [
-  {icon:'🧑‍🚀',label:'Astronaut'},{icon:'🦸',label:'Hero'},{icon:'🧙',label:'Wizard'},{icon:'🦊',label:'Fox'},
-  {icon:'🐉',label:'Dragon'},{icon:'🤖',label:'Robot'},{icon:'🦁',label:'Lion'},{icon:'🐺',label:'Wolf'},
-  {icon:'🦅',label:'Eagle'},{icon:'🐬',label:'Dolphin'},{icon:'🧜',label:'Mermaid'},{icon:'🦋',label:'Butterfly'},
+  // Human / sci-fi
+  {icon:'🧑‍🚀',label:'Astronaut'},{icon:'🦸',label:'Hero'},{icon:'🕵️',label:'Detective'},{icon:'🤠',label:'Cowboy'},
+  {icon:'🧑‍🎤',label:'Rockstar'},{icon:'🧑‍🔬',label:'Scientist'},{icon:'🧑‍🎨',label:'Artist'},{icon:'🧑‍✈️',label:'Pilot'},
+  {icon:'🤖',label:'Robot'},{icon:'👻',label:'Ghost'},{icon:'👾',label:'Alien'},{icon:'🧑‍🍳',label:'Chef'},
+  // Fantasy
+  {icon:'🧙',label:'Wizard'},{icon:'🦸',label:'Hero'},{icon:'🧚',label:'Fairy'},{icon:'🧝',label:'Elf'},
+  {icon:'🧞',label:'Genie'},{icon:'🧛',label:'Vampire'},{icon:'🐉',label:'Dragon'},{icon:'🦄',label:'Unicorn'},
+  {icon:'🧜',label:'Mermaid'},{icon:'🦋',label:'Butterfly'},{icon:'🧟',label:'Zombie'},{icon:'🔮',label:'Mystic'},
+  // Animals
+  {icon:'🦊',label:'Fox'},{icon:'🦁',label:'Lion'},{icon:'🐯',label:'Tiger'},{icon:'🐻',label:'Bear'},
+  {icon:'🐼',label:'Panda'},{icon:'🐺',label:'Wolf'},{icon:'🦝',label:'Raccoon'},{icon:'🐸',label:'Frog'},
+  {icon:'🐧',label:'Penguin'},{icon:'🦜',label:'Parrot'},{icon:'🦅',label:'Eagle'},{icon:'🦖',label:'Dino'},
+  {icon:'🐬',label:'Dolphin'},{icon:'🦈',label:'Shark'},{icon:'🦉',label:'Owl'},{icon:'🐱',label:'Cat'},
 ];
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -830,6 +843,7 @@ let editSessionIdx    = null;
 let editResults       = [];
 let pinPendingAction  = null;
 let parentPin         = localStorage.getItem('mr_pin') || '1234';
+let parentUnlocked    = false;
 let peEditPid         = null; // null=new player, index=editing
 let peSelectedAvatar  = '🧑‍🚀';
 let peSelectedTheme   = 0;
@@ -851,7 +865,7 @@ function showView(name) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   stopClock(); stopTimer();
-  if (name==='profile')    renderProfileSelect();
+  if (name==='profile')    { parentUnlocked = false; renderProfileSelect(); }
   if (name==='home')       { startClock(); renderHome(); }
   if (name==='parent')     { settingsViewPid=currentPid; renderParentSettings(); }
   if (name==='calendar')   renderCalendar();
@@ -1792,19 +1806,41 @@ function renderDayDetail() {
         <div class="detail-session-xp${sess.totalXP<0?' neg':''}">${xpSign}${sess.totalXP} XP</div>
       </div>
       ${taskRows}
-      <button type="button" class="detail-edit-btn" onclick="requestParentEdit(${globalIdx})">🔒 Edit Record</button>
+      <div class="detail-action-row">
+        <button type="button" class="detail-edit-btn" onclick="requestParentEdit(${globalIdx})">🔒 Edit</button>
+        <button type="button" class="detail-delete-btn" onclick="requestParentDelete(${globalIdx})">🗑️ Delete</button>
+      </div>
     </div>`;
   }).join('');
 }
 
 // ── PARENT EDIT ───────────────────────────────────────────────────────────────
-function requestParentEdit(sessionIdx) {
-  editSessionIdx = sessionIdx;
-  pinPendingAction = () => openDayEdit(sessionIdx);
+function requestParentAccess() {
+  pinPendingAction = () => { parentUnlocked = true; showView('parent'); };
   document.getElementById('pin-input').value = '';
   document.getElementById('pin-error').textContent = '';
   document.getElementById('overlay-pin').classList.add('show');
   setTimeout(() => document.getElementById('pin-input').focus(), 120);
+}
+function requirePin(action) {
+  if (parentUnlocked) { action(); return; }
+  pinPendingAction = action;
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('overlay-pin').classList.add('show');
+  setTimeout(() => document.getElementById('pin-input').focus(), 120);
+}
+function requestParentDelete(sessionIdx) {
+  requirePin(() => deleteSession(sessionIdx));
+}
+function deleteSession(sessionIdx) {
+  sessions.splice(sessionIdx, 1);
+  save('mr_sessions', sessions);
+  renderDayDetail();
+  renderCalendar();
+}
+function requestParentEdit(sessionIdx) {
+  requirePin(() => openDayEdit(sessionIdx));
 }
 function closePin() { document.getElementById('overlay-pin').classList.remove('show'); }
 function submitPin() {
