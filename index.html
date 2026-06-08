@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Mission Routine</title>
+<title>Roukido</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0d0d1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -88,7 +89,11 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
   background:radial-gradient(ellipse at 50% -10%,rgba(124,92,252,0.3) 0%,transparent 65%),#0d0d1a;
   align-items:center; justify-content:center; padding:2rem; gap:0;
 }
-.app-logo { font-size:60px; text-align:center; filter:drop-shadow(0 0 24px rgba(124,92,252,0.5)); }
+.app-logo { display:block; width:104px; height:104px; margin:0 auto; object-fit:contain; filter:drop-shadow(0 6px 20px rgba(124,92,252,0.45)); animation:logo-float 3.2s ease-in-out infinite; }
+@keyframes logo-float {
+  0%, 100% { transform:translateY(0); }
+  50%      { transform:translateY(-10px); }
+}
 .app-title { font-size:32px; font-weight:900; text-align:center; margin-top:8px; letter-spacing:-0.01em; }
 .app-tagline { font-size:11px; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; text-align:center; margin:6px 0 2.25rem; }
 .profile-cards { display:grid; gap:12px; width:100%; max-width:380px; margin-bottom:1.75rem; }
@@ -113,6 +118,47 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 .profile-card-age { font-size:10px; color:var(--muted); margin-top:5px; text-transform:uppercase; letter-spacing:0.12em; }
 .parent-btn { background:none; border:1px solid rgba(255,255,255,0.12); color:var(--muted); font-family:inherit; font-size:13px; padding:10px 26px; border-radius:24px; cursor:pointer; transition:all 0.15s; }
 .parent-btn:hover { border-color:rgba(255,255,255,0.28); color:var(--text); }
+
+/* ── SIGN IN ── */
+#view-signin {
+  background:radial-gradient(ellipse at 50% -10%,rgba(124,92,252,0.3) 0%,transparent 65%),#0d0d1a;
+  align-items:center; justify-content:center; padding:2rem; gap:0;
+}
+.signin-card { width:100%; max-width:340px; text-align:center; }
+.signin-blurb { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:1.75rem; }
+.signin-google-btn {
+  width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+  background:#fff; color:#1f1f1f; border:none; border-radius:14px;
+  padding:14px 20px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer;
+  transition:all 0.15s; box-shadow:0 8px 28px rgba(0,0,0,0.25);
+}
+.signin-google-btn:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(0,0,0,0.32); }
+.signin-google-btn:active { transform:scale(0.98); }
+.signin-tip { font-size:11px; color:var(--muted); margin-top:1rem; }
+
+/* ── ONBOARDING ── */
+#view-onboarding {
+  background:radial-gradient(ellipse at 50% -10%,rgba(124,92,252,0.3) 0%,transparent 65%),#0d0d1a;
+  align-items:center; justify-content:center; padding:2rem; gap:0;
+}
+.onboarding-card { width:100%; max-width:340px; text-align:center; }
+.onboarding-blurb { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:1.75rem; }
+.onboarding-start-btn {
+  width:100%; padding:16px 20px; background:var(--purple); color:#fff; border:none;
+  border-radius:16px; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer;
+  transition:all 0.15s; box-shadow:0 8px 28px rgba(124,92,252,0.35);
+}
+.onboarding-start-btn:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(124,92,252,0.45); }
+.onboarding-start-btn:active { transform:scale(0.98); }
+
+/* ── CLOUD ACCOUNT (parent settings) ── */
+.cloud-account-row { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:0.85rem 1rem; }
+.cloud-account-info { flex:1; min-width:0; }
+.cloud-account-email { font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cloud-account-status { font-size:11px; color:var(--muted); margin-top:3px; }
+.cloud-signout-btn { flex-shrink:0; padding:8px 16px; background:none; border:1px solid rgba(255,91,91,0.4); color:var(--red); border-radius:10px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+.cloud-signout-btn:hover { background:rgba(255,91,91,0.08); }
+.cloud-signout-btn.hidden { display:none; }
 
 /* ── AVATAR PICKER ── */
 #avatar-picker { position:fixed; inset:0; background:rgba(0,0,0,0.92); display:none; align-items:center; justify-content:center; flex-direction:column; z-index:200; padding:2rem; }
@@ -471,14 +517,44 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 <body>
 
 <!-- ═══════════════════════════════════════════
+     SIGN IN (cloud sync gate)
+════════════════════════════════════════════ -->
+<div id="view-signin" class="view">
+  <img class="app-logo" src="icons/mascot.png" alt="Roukido mascot">
+  <div class="app-title">Roukido</div>
+  <div class="app-tagline">Sign in to sync your missions</div>
+  <div class="signin-card">
+    <div class="signin-blurb">Parent sign-in keeps your kids' progress backed up and in sync across every device.</div>
+    <button type="button" class="signin-google-btn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72A5.4 5.4 0 0 1 3.69 9c0-.6.1-1.18.28-1.72V4.95H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.05l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.59-2.59C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div class="signin-tip" id="signin-tip">You'll only need to do this once per device.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
      PROFILE SELECT
 ════════════════════════════════════════════ -->
 <div id="view-profile" class="view active">
-  <div class="app-logo">🚀</div>
-  <div class="app-title">Mission Routine</div>
+  <img class="app-logo" src="icons/mascot.png" alt="Roukido mascot">
+  <div class="app-title">Roukido</div>
   <div class="app-tagline">Who's doing missions today?</div>
   <div class="profile-cards" id="profile-cards-container"></div>
   <button class="parent-btn" onclick="requestParentAccess()">⚙️ Parent Settings</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ONBOARDING (first-run — create the first player)
+════════════════════════════════════════════ -->
+<div id="view-onboarding" class="view">
+  <img class="app-logo" src="icons/mascot.png" alt="Roukido mascot">
+  <div class="app-title">Welcome to Roukido!</div>
+  <div class="app-tagline">Let's set up your first mission hero</div>
+  <div class="onboarding-card">
+    <div class="onboarding-blurb">Create a profile for your kid — pick their name, age, a character avatar and a colour theme.</div>
+    <button type="button" class="onboarding-start-btn" onclick="openPlayerEditor(null)">✨ Create First Mission Hero</button>
+  </div>
 </div>
 
 <!-- AVATAR PICKER -->
@@ -601,6 +677,14 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
       <button type="button" class="pin-save-btn" onclick="saveParentPin()">Save</button>
     </div>
     <div class="pin-tip">Used to protect record editing. Default: 1234</div>
+    <div class="parent-section-title">Cloud Account</div>
+    <div class="cloud-account-row">
+      <div class="cloud-account-info">
+        <div class="cloud-account-email" id="cloud-account-email">Not signed in</div>
+        <div class="cloud-account-status" id="cloud-account-status">Cloud sync is off on this device.</div>
+      </div>
+      <button type="button" class="cloud-signout-btn hidden" id="cloud-signout-btn" onclick="signOutCloud()">Sign Out</button>
+    </div>
   </div>
 </div>
 
@@ -813,13 +897,10 @@ const ROUTINE_TEMPLATES = [
 function makeRoutines() {
   return ROUTINE_TEMPLATES.map(r=>({ id:genId(), emoji:r.emoji, name:r.name, tasks:r.tasks.map(t=>({...t,id:genId()})) }));
 }
-const DEFAULT_PLAYERS = [
-  { id:'p_0', name:'Uzaiyr', age:10, avatar:'🧑‍🚀', theme:0, routines:makeRoutines() },
-  { id:'p_1', name:'Imtiyaz', age:7,  avatar:'👦',   theme:1, routines:makeRoutines() },
-];
 
 // ── STATE ────────────────────────────────────────────────────────────────────
-let players  = JSON.parse(localStorage.getItem('mr_players')  || 'null') || DEFAULT_PLAYERS;
+// New accounts start with zero players — onboarding walks them through creating their first one.
+let players  = JSON.parse(localStorage.getItem('mr_players')  || 'null') || [];
 let sessions = JSON.parse(localStorage.getItem('mr_sessions') || '[]');
 let currentPid        = 0;
 let previewRoutineId  = null;
@@ -854,20 +935,160 @@ function todayKey() { const d=getMYT(); return `${d.getFullYear()}-${d.getMonth(
 function nowMins() { const n=getMYT(); return n.getHours()*60+n.getMinutes(); }
 function timeToMins(t) { const[h,m]=t.split(':').map(Number); return h*60+m; }
 function genId() { return '_'+Math.random().toString(36).slice(2,9); }
-function save(key,val) { localStorage.setItem(key,JSON.stringify(val)); }
+function save(key,val) {
+  localStorage.setItem(key,JSON.stringify(val));
+  if (key==='mr_players' || key==='mr_sessions') queueCloudSync();
+}
 function todayXP(pid) {
   const today=todayKey();
   return sessions.filter(s=>s.date===today&&s.pid===pid).reduce((sum,s)=>sum+s.totalXP,0);
 }
 
+// ── CLOUD SYNC (Supabase) ────────────────────────────────────────────────────
+// Fill these in once you've created a Supabase project (see README for steps).
+const SUPABASE_URL      = 'https://ircegtfzkoodeyiedsrw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyY2VndGZ6a29vZGV5aWVkc3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTQ4MDQsImV4cCI6MjA5NjQzMDgwNH0.zbB4Htgrh-wbjUtwcFTRcr6Ra_lNGXZlJxuDxGhWugY';
+const sb = (window.supabase && /^https?:\/\//.test(SUPABASE_URL))
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+let cloudUser   = null;
+let syncTimer   = null;
+let syncBusy    = false;
+let syncPending = false;
+
+async function initCloudAuth() {
+  if (!sb) return; // cloud sync not configured — app behaves exactly as a local-only PWA
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session && (!cloudUser || cloudUser.id !== session.user.id)) onSignedIn(session);
+    if (event === 'SIGNED_OUT') {
+      cloudUser = null;
+      resetLocalCloudState(); // wipe this device's cache so the next sign-in (possibly a different account) starts clean
+      renderCloudAccount();
+      showView('signin');
+    }
+  });
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await onSignedIn(session);
+  else         showView('signin');
+}
+async function onSignedIn(session) {
+  cloudUser = session.user;
+  renderCloudAccount();
+  await pullRemote();
+  renderProfileSelect();
+  showView('profile');
+}
+function signInWithGoogle() {
+  if (!sb) { alert("Cloud sync isn't set up for this app yet — ask a grown-up to connect Supabase."); return; }
+  const tip = document.getElementById('signin-tip');
+  if (tip) tip.textContent = 'Opening Google sign-in…';
+  sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo:window.location.href } });
+}
+function signOutCloud() {
+  if (!sb || !cloudUser) return;
+  if (!confirm("Sign out?\n\nThis clears this device's cached data (your routines stay safe in the cloud). Sign back in with the same Google account to get them back — or a different account to switch profiles entirely.")) return;
+  sb.auth.signOut();
+}
+function resetLocalCloudState() {
+  localStorage.removeItem('mr_players');
+  localStorage.removeItem('mr_sessions');
+  localStorage.removeItem('mr_pin');
+  localStorage.removeItem('mr_synced_at');
+  players   = [];
+  sessions  = [];
+  parentPin = '1234';
+  parentUnlocked = false;
+}
+function formatSyncTime() {
+  const ts = Number(localStorage.getItem('mr_synced_at') || 0);
+  if (!ts) return 'never';
+  return new Date(ts).toLocaleString('en-MY', { hour:'2-digit', minute:'2-digit', day:'numeric', month:'short' });
+}
+function renderCloudAccount() {
+  const emailEl   = document.getElementById('cloud-account-email');
+  const statusEl  = document.getElementById('cloud-account-status');
+  const signOutBtn = document.getElementById('cloud-signout-btn');
+  if (!emailEl) return;
+  if (cloudUser) {
+    emailEl.textContent  = cloudUser.email || 'Signed in';
+    statusEl.textContent = syncPending ? 'Syncing…' : `☁️ Synced • last update ${formatSyncTime()}`;
+    signOutBtn.classList.remove('hidden');
+  } else {
+    emailEl.textContent  = 'Not signed in';
+    statusEl.textContent = sb ? 'Cloud sync is off on this device.' : 'Cloud sync is not set up for this app.';
+    signOutBtn.classList.add('hidden');
+  }
+}
+async function pullRemote() {
+  if (!sb || !cloudUser) return;
+  try {
+    const { data, error } = await sb.from('mission_routine_data').select('*').eq('user_id', cloudUser.id).maybeSingle();
+    if (error) throw error;
+    const localTs = Number(localStorage.getItem('mr_synced_at') || 0);
+    if (data) {
+      const remoteTs = new Date(data.updated_at).getTime();
+      if (remoteTs > localTs) {
+        players  = data.players  || players;
+        sessions = data.sessions || sessions;
+        if (data.pin) parentPin = data.pin;
+        localStorage.setItem('mr_players',  JSON.stringify(players));
+        localStorage.setItem('mr_sessions', JSON.stringify(sessions));
+        localStorage.setItem('mr_pin', parentPin);
+        localStorage.setItem('mr_synced_at', String(remoteTs));
+      } else if (remoteTs < localTs) {
+        await pushRemote();
+      }
+    } else {
+      await pushRemote(); // first sign-in on this account — seed the cloud with local data
+    }
+  } catch (e) {
+    console.warn('Cloud pull skipped (offline?)', e);
+  }
+  renderCloudAccount();
+}
+function queueCloudSync() {
+  if (!sb || !cloudUser) return;
+  syncPending = true;
+  renderCloudAccount();
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(flushCloudSync, 1500);
+}
+async function flushCloudSync() {
+  if (!sb || !cloudUser || syncBusy) return;
+  syncBusy = true;
+  try {
+    await pushRemote();
+    syncPending = false;
+  } catch (e) {
+    console.warn('Cloud push failed (offline?) — will retry when back online', e);
+  } finally {
+    syncBusy = false;
+    renderCloudAccount();
+  }
+}
+async function pushRemote() {
+  if (!sb || !cloudUser) return;
+  const now = Date.now();
+  const { error } = await sb.from('mission_routine_data').upsert({
+    user_id: cloudUser.id,
+    players, sessions, pin: parentPin,
+    updated_at: new Date(now).toISOString(),
+  });
+  if (error) throw error;
+  localStorage.setItem('mr_synced_at', String(now));
+}
+window.addEventListener('online', () => { if (syncPending) flushCloudSync(); });
+
 // ── VIEWS ────────────────────────────────────────────────────────────────────
 function showView(name) {
+  if (name==='profile' && players.length===0) name='onboarding'; // first run — no profiles yet
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   stopClock(); stopTimer();
   if (name==='profile')    { parentUnlocked = false; renderProfileSelect(); }
   if (name==='home')       { startClock(); renderHome(); }
-  if (name==='parent')     { settingsViewPid=currentPid; renderParentSettings(); }
+  if (name==='parent')     { settingsViewPid=currentPid; renderParentSettings(); renderCloudAccount(); }
   if (name==='calendar')   renderCalendar();
   if (name==='day-detail') renderDayDetail();
 }
@@ -1647,9 +1868,10 @@ function savePlayerEditor() {
   const name = document.getElementById('pe-name').value.trim();
   const age  = parseInt(document.getElementById('pe-age').value) || 0;
   if (!name) { alert('Please enter a name.'); return; }
+  const wasFirstRun = players.length === 0;
   if (peEditPid === null) {
     if (players.length >= 4) { alert('Maximum 4 players reached.'); return; }
-    players.push({ id:genId(), name, age, avatar:peSelectedAvatar, theme:peSelectedTheme, routines:[] });
+    players.push({ id:genId(), name, age, avatar:peSelectedAvatar, theme:peSelectedTheme, routines:makeRoutines() });
   } else {
     players[peEditPid] = { ...players[peEditPid], name, age, avatar:peSelectedAvatar, theme:peSelectedTheme };
   }
@@ -1658,6 +1880,7 @@ function savePlayerEditor() {
   renderParentPlayers();
   renderSettingsTabs();
   renderProfileSelect();
+  if (wasFirstRun) { alert(`🎉 Welcome aboard, ${name}!`); showView('profile'); }
 }
 function deletePlayer(pidx) {
   if (!confirm(`Remove ${players[pidx].name}? All their routines will be deleted.`)) return;
@@ -1904,6 +2127,7 @@ function saveParentPin() {
   if (!/^\d{4}$/.test(val)) { alert('PIN must be exactly 4 digits.'); return; }
   parentPin = val;
   localStorage.setItem('mr_pin', parentPin);
+  queueCloudSync();
   document.getElementById('pin-change-input').value = '';
   alert('✅ PIN updated!');
 }
@@ -1916,6 +2140,7 @@ document.head.appendChild(blinkStyle);
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderProfileSelect();
 showView('profile');
+initCloudAuth();
 </script>
 
 <script>

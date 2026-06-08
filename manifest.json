@@ -1,7 +1,7 @@
 {
-  "name": "Mission Routine",
-  "short_name": "Missions",
-  "description": "Gamified daily routine tracker for Uzaiyr and Imtiyaz",
+  "name": "Roukido",
+  "short_name": "Roukido",
+  "description": "Gamified daily routine tracker for kids",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

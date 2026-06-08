@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mission-routine-v1';
+const CACHE_NAME = 'roukido-v3';
 
 const STATIC_ASSETS = [
   '/',
@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/mascot.png',
 ];
 
 const GOOGLE_FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap';
