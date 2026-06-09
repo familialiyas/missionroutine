@@ -169,8 +169,16 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 .avatar-opt { background:var(--surface); border:2px solid var(--border); border-radius:16px; padding:12px 6px 9px; text-align:center; cursor:pointer; transition:all 0.18s; }
 .avatar-opt:hover { border-color:rgba(124,92,252,0.6); transform:scale(1.04); }
 .avatar-opt.selected { border-color:var(--gold); background:rgba(245,200,66,0.1); }
-.avatar-opt-icon { font-size:34px; line-height:1; margin-bottom:5px; }
+.avatar-opt-icon { font-size:34px; line-height:1; margin-bottom:5px; height:38px; display:flex; align-items:center; justify-content:center; }
 .avatar-opt-label { font-size:10px; color:var(--muted); font-weight:700; }
+.av-img { object-fit:contain; display:inline-block; }
+.avatar-opt-icon .av-img    { width:36px; height:36px; display:block; }
+.profile-avatar-lg .av-img  { width:62px; height:62px; display:block; margin:0 auto; }
+.complete-avatar .av-img    { width:88px; height:88px; display:block; margin:0 auto; }
+.home-avatar-btn .av-img    { width:28px; height:28px; }
+.pass-avatar-btn .av-img    { width:18px; height:18px; }
+.player-mgmt-av .av-img     { width:28px; height:28px; }
+.settings-ptab .av-img, .cal-ptab .av-img { width:18px; height:18px; vertical-align:middle; margin-right:2px; }
 .ap-save { padding:12px 40px; background:var(--purple); color:#fff; border:none; border-radius:14px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; }
 
 /* ── PLAYER HOME ── */
@@ -838,20 +846,18 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 <script>
 // ── CATALOGUE ────────────────────────────────────────────────────────────────
 const AVATAR_CATALOGUE = [
-  // Human / sci-fi
-  {icon:'🧑‍🚀',label:'Astronaut'},{icon:'🦸',label:'Hero'},{icon:'🕵️',label:'Detective'},{icon:'🤠',label:'Cowboy'},
-  {icon:'🧑‍🎤',label:'Rockstar'},{icon:'🧑‍🔬',label:'Scientist'},{icon:'🧑‍🎨',label:'Artist'},{icon:'🧑‍✈️',label:'Pilot'},
-  {icon:'🤖',label:'Robot'},{icon:'👻',label:'Ghost'},{icon:'👾',label:'Alien'},{icon:'🧑‍🍳',label:'Chef'},
-  // Fantasy
-  {icon:'🧙',label:'Wizard'},{icon:'🦸',label:'Hero'},{icon:'🧚',label:'Fairy'},{icon:'🧝',label:'Elf'},
-  {icon:'🧞',label:'Genie'},{icon:'🧛',label:'Vampire'},{icon:'🐉',label:'Dragon'},{icon:'🦄',label:'Unicorn'},
-  {icon:'🧜',label:'Mermaid'},{icon:'🦋',label:'Butterfly'},{icon:'🧟',label:'Zombie'},{icon:'🔮',label:'Mystic'},
-  // Animals
-  {icon:'🦊',label:'Fox'},{icon:'🦁',label:'Lion'},{icon:'🐯',label:'Tiger'},{icon:'🐻',label:'Bear'},
-  {icon:'🐼',label:'Panda'},{icon:'🐺',label:'Wolf'},{icon:'🦝',label:'Raccoon'},{icon:'🐸',label:'Frog'},
-  {icon:'🐧',label:'Penguin'},{icon:'🦜',label:'Parrot'},{icon:'🦅',label:'Eagle'},{icon:'🦖',label:'Dino'},
-  {icon:'🐬',label:'Dolphin'},{icon:'🦈',label:'Shark'},{icon:'🦉',label:'Owl'},{icon:'🐱',label:'Cat'},
+  {icon:'icons/roukido-profile.png',   label:'Roukido'},
+  {icon:'icons/knight-profile.png',    label:'Knight'},
+  {icon:'icons/ninja-profile.png',     label:'Ninja'},
+  {icon:'icons/wizard-profile.png',    label:'Wizard'},
+  {icon:'icons/scientist-profile.png', label:'Scientist'},
+  {icon:'icons/superhero-profile.png', label:'Superhero'},
+  {icon:'icons/pirate-profile.png',    label:'Pirate'},
+  {icon:'icons/robot-profile.png',     label:'Robot'},
 ];
+function av(val) {
+  return val && val.startsWith('icons/') ? `<img src="${val}" alt="" class="av-img">` : (val || '');
+}
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const THEME_COLORS = ['#2e6fff','#00c8e0','#22c55e','#f97316','#7c5cfc','#ec4899','#ef4444','#eab308'];
@@ -898,7 +904,7 @@ let pinPendingAction  = null;
 let parentPin         = localStorage.getItem('mr_pin') || '1234';
 let parentUnlocked    = false;
 let peEditPid         = null; // null=new player, index=editing
-let peSelectedAvatar  = '🧑‍🚀';
+let peSelectedAvatar  = 'icons/roukido-profile.png';
 let peSelectedTheme   = 0;
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
@@ -1075,7 +1081,7 @@ function renderProfileSelect() {
   c.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
   c.innerHTML = players.map((p,i)=>`
     <div class="profile-card profile-card-${p.theme}" onclick="selectProfile(${i})">
-      <div class="profile-avatar-lg">${p.avatar}</div>
+      <div class="profile-avatar-lg">${av(p.avatar)}</div>
       <div class="profile-card-name">${p.name}</div>
       <div class="profile-card-age">Age ${p.age}</div>
     </div>`).join('');
@@ -1089,7 +1095,7 @@ function openAvatarPicker(pid) {
   document.getElementById('ap-sub').textContent = `Pick ${players[pid].name}'s character`;
   document.getElementById('avatar-grid').innerHTML = AVATAR_CATALOGUE.map(a=>`
     <div class="avatar-opt ${players[pid].avatar===a.icon?'selected':''}" onclick="selectAvatarOpt(this,'${a.icon}')">
-      <div class="avatar-opt-icon">${a.icon}</div>
+      <div class="avatar-opt-icon">${av(a.icon)}</div>
       <div class="avatar-opt-label">${a.label}</div>
     </div>`).join('');
   document.getElementById('avatar-picker').classList.add('show');
@@ -1151,7 +1157,7 @@ function renderHome() {
   const p = players[currentPid];
   // avatar button
   const ab = document.getElementById('home-avatar-btn');
-  if (ab) ab.textContent = p.avatar;
+  if (ab) ab.innerHTML = av(p.avatar);
   // greeting
   const hrs = getMYT().getHours();
   const greet = hrs < 12 ? 'Good morning,' : hrs < 17 ? 'Good afternoon,' : 'Good evening,';
@@ -1280,7 +1286,7 @@ function renderActiveTask() {
     const others = players.map((p,i)=>({p,i})).filter(x=>x.i!==currentPid);
     strip.innerHTML = others.length
       ? `<span class="pass-label">Switch</span>`
-        + others.map(x=>`<button type="button" class="pass-avatar-btn" onclick="passToPlayer(${x.i})" title="${x.p.name}">${x.p.avatar}</button>`).join('')
+        + others.map(x=>`<button type="button" class="pass-avatar-btn" onclick="passToPlayer(${x.i})" title="${x.p.name}">${av(x.p.avatar)}</button>`).join('')
       : '';
     if (row2) row2.classList.toggle('visible', others.length > 0);
   }
@@ -1409,7 +1415,7 @@ function finishRoutine() {
 }
 
 function renderComplete() {
-  document.getElementById('complete-avatar').textContent = players[currentPid].avatar;
+  document.getElementById('complete-avatar').innerHTML = av(players[currentPid].avatar);
   const maxXP = activeRoutine.tasks.reduce((s,t)=>s+t.xp+10, 0); // max = all on-time with bonus
   const pct   = maxXP > 0 ? (sessionXP/maxXP)*100 : 0;
   const pname = players[currentPid].name;
@@ -1447,7 +1453,7 @@ function renderParentPlayers() {
   if (!el) return;
   el.innerHTML = players.map((p,i)=>`
     <div class="player-mgmt-card">
-      <div class="player-mgmt-av">${p.avatar}</div>
+      <div class="player-mgmt-av">${av(p.avatar)}</div>
       <div class="player-mgmt-info">
         <div class="player-mgmt-name">${p.name}</div>
         <div class="player-mgmt-meta">Age ${p.age} · ${p.routines.length} routines</div>
@@ -1461,7 +1467,7 @@ function renderSettingsTabs() {
   const el = document.getElementById('settings-ptabs');
   if (!el) return;
   el.innerHTML = players.map((p,i)=>`
-    <button type="button" class="settings-ptab ${i===settingsViewPid?'active':''}" onclick="switchSettingsPlayer(${i})">${p.avatar} ${p.name}</button>`).join('');
+    <button type="button" class="settings-ptab ${i===settingsViewPid?'active':''}" onclick="switchSettingsPlayer(${i})">${av(p.avatar)} ${p.name}</button>`).join('');
 }
 function switchSettingsPlayer(pid) { settingsViewPid=pid; renderSettingsTabs(); renderParentRoutines(); }
 function renderParentRoutines() {
@@ -1804,7 +1810,7 @@ function openPlayerEditor(pidxOrNull) {
   peEditPid = pidxOrNull;
   const isNew = pidxOrNull === null;
   document.getElementById('pe-title').textContent = isNew ? 'New Player' : 'Edit Player';
-  const p = isNew ? { name:'', age:'', avatar:'🧑‍🚀', theme: players.length % 4 } : players[pidxOrNull];
+  const p = isNew ? { name:'', age:'', avatar:'icons/roukido-profile.png', theme: players.length % 4 } : players[pidxOrNull];
   peSelectedAvatar = p.avatar;
   peSelectedTheme  = p.theme ?? 0;
   document.getElementById('pe-name').value = p.name;
@@ -1812,7 +1818,7 @@ function openPlayerEditor(pidxOrNull) {
   // avatar grid
   document.getElementById('pe-avatar-grid').innerHTML = AVATAR_CATALOGUE.map(a=>`
     <div class="avatar-opt ${peSelectedAvatar===a.icon?'selected':''}" onclick="peSelectAvatar(this,'${a.icon}')">
-      <div class="avatar-opt-icon">${a.icon}</div>
+      <div class="avatar-opt-icon">${av(a.icon)}</div>
       <div class="avatar-opt-label">${a.label}</div>
     </div>`).join('');
   renderThemeSwatches();
@@ -1881,7 +1887,7 @@ function renderCalPlayerTabs() {
   const el = document.getElementById('cal-player-tabs');
   if (!el) return;
   el.innerHTML = players.map((p,i)=>`
-    <button type="button" class="cal-ptab ${i===calViewPid?'active':''}" onclick="calSwitchPlayer(${i})">${p.avatar} ${p.name}</button>`).join('');
+    <button type="button" class="cal-ptab ${i===calViewPid?'active':''}" onclick="calSwitchPlayer(${i})">${av(p.avatar)} ${p.name}</button>`).join('');
 }
 function calPrevMonth() {
   calViewMonth--;

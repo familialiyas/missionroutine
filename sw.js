@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roukido-v4';
+const CACHE_NAME = 'roukido-v5';
 
 const STATIC_ASSETS = [
   '/',
@@ -7,6 +7,14 @@ const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/mascot.png',
+  '/icons/roukido-profile.png',
+  '/icons/knight-profile.png',
+  '/icons/ninja-profile.png',
+  '/icons/wizard-profile.png',
+  '/icons/scientist-profile.png',
+  '/icons/superhero-profile.png',
+  '/icons/pirate-profile.png',
+  '/icons/robot-profile.png',
 ];
 
 const GOOGLE_FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap';
