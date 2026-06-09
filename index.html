@@ -79,6 +79,8 @@ body.theme-7 {
 * { box-sizing:border-box; margin:0; padding:0; }
 html { height:100%; background:#04040e; }
 body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background:var(--profile-bg); font-family:'Nunito',sans-serif; color:var(--text); overflow-x:hidden; transition:background 0.5s; }
+@media (min-width:600px)  { body { max-width:600px; } }
+@media (min-width:1000px) { body { max-width:760px; } }
 .view { display:none; min-height:100vh; flex-direction:column; }
 .view.active { display:flex; }
 .back-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:22px; padding:4px 8px; line-height:1; transition:color 0.15s; }

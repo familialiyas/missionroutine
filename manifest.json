@@ -4,7 +4,7 @@
   "description": "Gamified daily routine tracker for kids",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#0d0d1a",
   "theme_color": "#0d0d1a",
   "icons": [

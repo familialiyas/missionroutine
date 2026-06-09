@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roukido-v5';
+const CACHE_NAME = 'roukido-v6';
 
 const STATIC_ASSETS = [
   '/',
