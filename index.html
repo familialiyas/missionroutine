@@ -848,14 +848,14 @@ body { height:100%; min-height:100vh; max-width:430px; margin:0 auto; background
 <script>
 // ── CATALOGUE ────────────────────────────────────────────────────────────────
 const AVATAR_CATALOGUE = [
-  {icon:'icons/roukido-profile.png',   label:'Roukido'},
-  {icon:'icons/knight-profile.png',    label:'Knight'},
-  {icon:'icons/ninja-profile.png',     label:'Ninja'},
-  {icon:'icons/wizard-profile.png',    label:'Wizard'},
-  {icon:'icons/scientist-profile.png', label:'Scientist'},
-  {icon:'icons/superhero-profile.png', label:'Superhero'},
-  {icon:'icons/pirate-profile.png',    label:'Pirate'},
-  {icon:'icons/robot-profile.png',     label:'Robot'},
+  {icon:'icons/roukido-astronaut.png', label:'Roukido'},
+  {icon:'icons/roukido-detective.png', label:'Detective'},
+  {icon:'icons/roukido-ninja.png',     label:'Ninja'},
+  {icon:'icons/roukido-pilot.png',     label:'Pilot'},
+  {icon:'icons/roukido-pirate.png',    label:'Pirate'},
+  {icon:'icons/roukido-scientist.png', label:'Scientist'},
+  {icon:'icons/roukido-soldier.png',   label:'Soldier'},
+  {icon:'icons/roukido-wizard.png',    label:'Wizard'},
 ];
 function av(val) {
   return val && val.startsWith('icons/') ? `<img src="${val}" alt="" class="av-img">` : (val || '');
@@ -906,7 +906,7 @@ let pinPendingAction  = null;
 let parentPin         = localStorage.getItem('mr_pin') || '1234';
 let parentUnlocked    = false;
 let peEditPid         = null; // null=new player, index=editing
-let peSelectedAvatar  = 'icons/roukido-profile.png';
+let peSelectedAvatar  = 'icons/roukido-astronaut.png';
 let peSelectedTheme   = 0;
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
@@ -1812,7 +1812,7 @@ function openPlayerEditor(pidxOrNull) {
   peEditPid = pidxOrNull;
   const isNew = pidxOrNull === null;
   document.getElementById('pe-title').textContent = isNew ? 'New Player' : 'Edit Player';
-  const p = isNew ? { name:'', age:'', avatar:'icons/roukido-profile.png', theme: players.length % 4 } : players[pidxOrNull];
+  const p = isNew ? { name:'', age:'', avatar:'icons/roukido-astronaut.png', theme: players.length % 4 } : players[pidxOrNull];
   peSelectedAvatar = p.avatar;
   peSelectedTheme  = p.theme ?? 0;
   document.getElementById('pe-name').value = p.name;
